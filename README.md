@@ -16,7 +16,7 @@ To RUN:
 
 Copy the contents into directory:
 
-'....snakewm/apps/tools/'
+'....snakewm/apps/tools/CATH/'
 
 and run snakewm.py.
 
