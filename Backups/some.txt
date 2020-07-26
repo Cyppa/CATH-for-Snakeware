@@ -1,4 +1,8 @@
-dfgd
+This is just a place holder file to have something in this directory.
+
+This directory 'Backups' is where text files are saved when exitng the editor via the window'X' button.
+A file with a timestamped name is created. This is a safety measure in case the window close button is pressed accidentally
+with the current working file in an unsved state.
 
 
 
