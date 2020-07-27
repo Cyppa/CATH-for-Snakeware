@@ -36,7 +36,9 @@ def update_Hscroll(self):
         self.H_char_unit  = scrolling_space / self.CATH.max_line_chars    
         self.H_unit       = self.over_chars / scrolling_space             # Amount of pixel movement of bar per character
         self.char_unit    = scrolling_space / self.over_chars             # How many pixels to move scroll bar per character (with arrow keys)
-        self.H_scroll_E   = self.char_unit * self.CATH.new_pos            # Keep Bar position updated
+        
+        if self.mouse == 0:
+            self.H_scroll_E   = self.char_unit * self.CATH.new_pos        # Keep Bar position updated (when not scroling with mouse)
         
         #Is mouse click inside scroll bar?
         if (self.mouse == 1 and self.mouseX > self.H_scroll_E and self.mouseX < (self.H_scroll_E + self.H_bar_length) and

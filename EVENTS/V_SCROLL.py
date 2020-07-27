@@ -35,7 +35,9 @@ def update_Vscroll(self):
         self.V_line_unit    = scrolling_space  / total_Y
         self.V_unit         = self.over_lines / scrolling_space # Amount of pixel movement of bar per line
         self.line_unit      = scrolling_space / self.over_lines # How many pixels to move scroll bar per line (with arrow keys)
-        self.scroll_TOP     = (self.line_unit * self.CATH.real) + self.V_scroll_Y   # Keep Bar position updated
+        
+        if self.mouse == 0:
+            self.scroll_TOP = (self.line_unit * self.CATH.real) + self.V_scroll_Y # Keep Bar position updated (when not scroling with mouse)
         
         # Is mouse click inside scroll bar?
         if (self.mouse == 1 and self.mouseX > self.V_scroll_X and self.mouseX < self.panel_W and
