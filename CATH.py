@@ -40,6 +40,7 @@ from .EVENTS.TEXT_ENTRY            import text_entry
 from .EVENTS.SEARCH_BUTTONS        import search_buttons
 from .EVENTS.OPTION_BUTTONS        import option_buttons
 from .EVENTS.V_SCROLL              import update_Vscroll, render_Vscroll
+from .EVENTS.H_SCROLL              import update_Hscroll, render_Hscroll
 from .EVENTS.WINDOW                import update_window_size, window_move_events
 from .ASSETS.GUI_ASSETS            import create_assets
 from .ASSETS.BUILD_SEARCH_BUTTONS  import rebuild_search
@@ -112,9 +113,11 @@ class Cath(pygame_gui.elements.UIWindow):
         x, y = pygame.mouse.get_pos()
         status_update(self, x, y) #self.character_X, self.line_Y)
         update_Vscroll(self)
+        update_Hscroll(self)
         update_window_size(self)
         
         self.surface_element.image.blit(self.background, (0, 0))
         self.CATH.draw(self.surface_element.image)
         render_Vscroll(self, self.surface_element.image)
+        render_Hscroll(self, self.surface_element.image)
     
