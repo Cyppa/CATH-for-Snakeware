@@ -38,7 +38,7 @@ def update_events_mouse(self, event):
         #print('self.mouseX', self.mouseX,'self.mouseY', self.mouseY)
         # Check if mouse click is in writeable area
         if (x > 0 and x < (self.surface_size[0] - self.scroll_W) and y > 0 and
-            y < (self.surface_size[1])):
+            y < (self.surface_size[1]- self.scroll_W)):
             
             self.scrolled = 0
             self.CATH.no_entry = 0
@@ -85,11 +85,13 @@ def update_events_mouse(self, event):
         
     if event.type == pygame.MOUSEBUTTONUP:
         
-       
         #x, y = self.window_position
         self.V_col         = 100
+        self.H_col         = 100
         self.mouse         = 0
-        self. scrolling    = 0
+        self.scrolling     = 0
         self.V_scr_grabbed = 0
         self.V_release     = 0
+        self.H_release     = 0
+        self.H_scr_grabbed = 0
         #update_text_info(self.CATH)
