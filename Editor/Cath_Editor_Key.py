@@ -85,9 +85,6 @@ def key_down(self, key):
         
         elif self.display_current_line == 1:
             # We are on top line
-            # Initiate movement of V Scroll Bar
-            if self.current_line > 1:
-                self.parent.scroll_TOP -= self.parent.line_unit
             # Move screen up and update display
             if len(self.lines) > self.total_lines:
                 self.display_lines.clear()
@@ -95,7 +92,6 @@ def key_down(self, key):
                 for l in range(len(self.display_lines)):
                     self.display_lines[l] = self.lines[l + self.real - 1]
                 
-        self.selected      = 0
         self.selected = 0
         clear_selected(self)
         key_home(self)
@@ -133,9 +129,6 @@ def key_down(self, key):
             self.display_current_line += 1
         else:
             # We are at bottom line of screen
-            # Initiate movement of V Scroll Bar
-            if self.current_line < len(self.lines):
-                self.parent.scroll_TOP += self.parent.line_unit
             # Move screen up and update display   
             if len(self.lines) > self.max_lines:
                 self.display_lines.clear()
@@ -186,6 +179,7 @@ def key_down(self, key):
             # For purposes of horizontal scroling
             if self.pos >= self.max_line_chars + self.new_pos:
                 self.new_pos += 1
+                
             update_text_info(self)
     
     # Page Up
@@ -251,6 +245,7 @@ def key_down(self, key):
         # Do we need to scroll text?
         if self.chars > self.max_line_chars:
             self.new_pos = self.chars - self.max_line_chars
+        
         update_text_info(self)
         
     # TEXT REMOVAL
