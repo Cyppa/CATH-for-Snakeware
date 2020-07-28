@@ -36,7 +36,7 @@ def bottom_panel_buttons(self, event, ui_manager):    # PyGame_Gui Button Presse
             try:
                 integer = int(self.goto_string)
                 GOTO_line(self, integer)
-            except ValueError: self.top_label.set_text(("INVALID INPUT!")[:self.top_label_chars])
+            except (ValueError, AttributeError): self.top_label.set_text(("INVALID INPUT!")[:self.top_label_chars])
             else: pass
         
         if event.ui_element == self.quit_button_save:
