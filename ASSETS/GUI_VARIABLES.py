@@ -51,6 +51,8 @@ def create_gui_variables(self, position):
     self.Eheight               = size[1] - self.EditorY              # Total height of text editor backend
     self.FPS                   = 60
     
+    self.mouse_X               = 0
+    self.mouse_Y               = 0
     self.Panel_size            = self.buttonY + (self.offset *2) # Height of PANELS
     self.mouse_updater         = 1         # Do we need mouse updating?
     self.scroll_W              = 16        # Vertical scroll bar width in pixels
@@ -106,10 +108,34 @@ def create_gui_variables(self, position):
     self.H_move                = 0
     self.H_scroll_E            = 0
     
+    ### Selecting variables
+    self.sel_start             = [0, 0]
+    self.sel_end               = [0, 0]
+    self.sel_loop              = 0
+    self.sel_chars             = 0
+    self.sel_count             = 0
+    self.sel_move_line         = 10 # Line Scrolling speed of selection
+    self.body_lines            = 0
+    self.grab_line_len         = 0
+    self.select_scroll         = 0
+    self.line_len              = 0
+    self.selecting             = 0
+    self.no_scroll             = 0
+
+    # Select top / bottom lines Select Cursor
+    self.selX1,  self.selY1    = 0, 0
+    self.selX2,  self.selY2    = 0, 0
+    self.selX1a, self.selY1a   = 0, 0
+    self.selX2a, self.selY2a   = 0, 0
+    
+    # Body / Lines of Selected Text
+    self.bX1,    self.bY1      = 0, 0
+    self.bX2,    self.bY2      = 0, 0
+    
+    # Button Variable
     self.file_save             = 0
     self.file_open             = 0
     self.editor_text           = 1         # 1 = we can type, 0 = no able to type
-    self.selectable            = 0
     self.grid_was_on           = 0         # grid related
     self.grid_on               = 0         # 1 = yes, 0 = no
     self.grid_strength         = 0
@@ -118,8 +144,6 @@ def create_gui_variables(self, position):
     self.default_theme         = 'ASSETS/themes/theme.json'
     self.theme_counter         = 0
     self.file_string           = ""
-    self.selected              = 0         # 1 = a selection has just been made
-    self.selecting             = 0
     self.save_error            = False
     
     # Search Replace
