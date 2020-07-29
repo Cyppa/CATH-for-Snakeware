@@ -54,8 +54,5 @@ def text_entry(self, event):
         if event.ui_element == self.text_entry_goto:
             self.goto_string = event.text
             
-            try:
-                integer = int(self.goto_string)
-                GOTO_line(self, integer)
-            except ValueError: self.top_label.set_text(("INVALID INPUT!")[:self.top_label_chars])
-            else: pass
+            integer = int(self.goto_string)
+            GOTO_line(self, integer)

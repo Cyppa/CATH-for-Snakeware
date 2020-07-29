@@ -18,6 +18,8 @@
 #######################################################################################################
 
 ### Extra methods for CathEditor.py
+import time
+
 from ..Editor.SQUARE import Square
 
 # Bring cursor and screen to character position 0
