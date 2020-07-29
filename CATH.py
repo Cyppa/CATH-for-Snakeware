@@ -42,19 +42,19 @@ from .EVENTS.OPTION_BUTTONS        import option_buttons
 from .EVENTS.V_SCROLL              import update_Vscroll, render_Vscroll
 from .EVENTS.H_SCROLL              import update_Hscroll, render_Hscroll
 from .EVENTS.WINDOW                import update_window_size, window_move_events
+from .EVENTS.WINDOW                import window_move_events
+from .EVENTS.GUI_SELECT            import select_text, render_selection, build_selection
 from .ASSETS.GUI_ASSETS            import create_assets
 from .ASSETS.BUILD_SEARCH_BUTTONS  import rebuild_search
 from .ASSETS.GUI_VARIABLES         import create_gui_variables
-
+from .Editor.SHARED                import Col
 from .Editor.Cath_Editor           import PyEdit_no_gui
 from .Editor.Cath_Editor_Extras    import update_text_info
 from .Editor.SHARED                import clear_selected, update_scroll_info, Col
 from pygame_gui.ui_manager         import UIManager
 from pygame_gui.elements.ui_window import UIWindow
 from pygame_gui.elements.ui_image  import UIImage
-#from .EDITOR                        import Editor
-from .Editor.SHARED                 import Col
-from .EVENTS.WINDOW                 import window_move_events
+
 
 class Cath(pygame_gui.elements.UIWindow):
     
@@ -86,38 +86,39 @@ class Cath(pygame_gui.elements.UIWindow):
         
         self.CATH = PyEdit_no_gui(self.EditorX, self.EditorY, self.Ewidth, self.Eheight,
                                   self.FPS, self.FONT, self.text_size, "white", self.parent)
-        print('self.CATH', self.CATH)
-        print('offset', self.offset)
-        print('size', self.surface_size)
-        #print('self.CATH', self.CATH)
         
     def process_event(self, event):
         super().process_event(event)
-        #print('event:', str(event).split(":")[2],str(event).split(":")[3])
-        #print('EVENT:', event)
-        #if "MouseButton" in str(event): print('event:', event)
+        
         self.CATH.update(event) # Backend Editor
         top_panel_buttons(self, event, self.ui_manager)
         bottom_panel_buttons(self, event, self.ui_manager)
         close_window(self, event, self.ui_manager)
-        update_events_mouse(self, event)
         confirmation(self, event, self.ui_manager)
         window_close_events(self, event)
         text_entry(self, event)
         search_buttons(self, event)
         option_buttons(self, event, self.ui_manager)
-        window_move_events(self, event)        
+        window_move_events(self, event)
+        update_events_mouse(self, event)
 
     def update(self, time_delta):
         super().update(time_delta)
         x, y = pygame.mouse.get_pos()
-        status_update(self, x, y) #self.character_X, self.line_Y)
+        status_update(self, x, y)
+        # Update Selection box
+        if self.selecting == 1:
+            build_selection(self)
         update_Vscroll(self)
         update_Hscroll(self)
         update_window_size(self)
         
         self.surface_element.image.blit(self.background, (0, 0))
+        if self.selecting == 1:
+            render_selection(self, self.surface_element.image)
         self.CATH.draw(self.surface_element.image)
         render_Vscroll(self, self.surface_element.image)
         render_Hscroll(self, self.surface_element.image)
+        select_text(self)
+        
     
