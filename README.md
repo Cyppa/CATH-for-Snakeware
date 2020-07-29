@@ -18,7 +18,7 @@ Copy the contents into directory:
 
 '....snakewm/apps/tools/CATH/'
 
-and run snakewm.py.
+and run 'wm.py'.
 
 You will then find the entry 'CATH' under the tools drop-down menu.
 
