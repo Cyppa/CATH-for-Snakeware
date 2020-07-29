@@ -24,7 +24,6 @@ def update_Hscroll(self):
     for line in self.CATH.lines:
         if len(line) > self.longest_line: 
             self.longest_line = len(line)
-    print('self.longest_line', self.longest_line)
     
     # Do we need Horizontal bar?
     if self.longest_line > self.CATH.max_line_chars:
@@ -43,7 +42,7 @@ def update_Hscroll(self):
         #Is mouse click inside scroll bar?
         if (self.mouse == 1 and self.mouseX > self.H_scroll_E and self.mouseX < (self.H_scroll_E + self.H_bar_length) and
             self.mouseY > (self.surface_size[1] - self.scroll_W) and self.mouseY < self.surface_size[1]
-            and self.H_release == 0):
+            and self.H_release == 0 and self.no_scroll == 0):
             
             # Create and grab some variables and get out of this loop
             self.window_move   = False

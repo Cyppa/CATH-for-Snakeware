@@ -42,7 +42,7 @@ def update_Vscroll(self):
         # Is mouse click inside scroll bar?
         if (self.mouse == 1 and self.mouseX > self.V_scroll_X and self.mouseX < self.panel_W and
             self.mouseY > self.scroll_TOP and self.mouseY < self.scroll_TOP + self.V_bar_length
-            and self.V_release == 0):
+            and self.V_release == 0 and self.no_scroll == 0):
             # Create and grab some variables and get out of this loop
             self.window_move   = False
             self.temp_var      = self.scroll_TOP

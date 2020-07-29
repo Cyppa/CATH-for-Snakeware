@@ -32,13 +32,33 @@ def status_update(self, mouse_X = 1, mouse_Y = 1):
     
     if caps == 0: self.caps = "OFF"
     else        : self.caps = " ON"
+    a, z  = pygame.mouse.get_pos()
+    x, y        = pygame.mouse.get_pos()
+    x           = x + self.rel_X - self.EditorX
+    y           = y + self.rel_Y - (self.EditorY + self.bar_width)
     
-    if mouse_Y > 0:
+    # Get clicks at centre of character by creating an offset
+    x = x - (self.CATH.text_width // 2)
+    y = y + (self.CATH.text_width // 2)
+    
+    character_X = round(x / self.CATH.text_width)
+    line_Y      = round(y / self.text_size)
+    
+    self.mouse_X     = character_X + 1
+    self.mouse_Y     = line_Y
+    
+    if self.mouse_X > self.CATH.max_line_chars:
+        self.mouse_X = self.CATH.max_line_chars
+    if self.mouse_Y >= self.CATH.max_lines:
+        self.mouse_Y = self.CATH.max_lines -1
+    
+    if self.mouse_Y > 0:
         self.status_text = ("Line: " + str(self.line_pos) + " / " + str(self.all_lines) +
                             "  ||  Pos: " + str(self.cur_pos) + " / " + str(self.chars) +
-                            "  ||  CAPS: " +  str(self.caps) + "  ||  MOUSE: " + str(mouse_X)
-                            + ", " + str(mouse_Y))        
+                            "  ||  CAPS: " +  str(self.caps) + "  ||  MOUSE: " + str(self.mouse_X + self.CATH.new_pos)
+                            + " : " + str(self.mouse_Y + self.CATH.real))        
     
+    self.line_length = len(self.CATH.lines[self.mouse_Y + self.CATH.real - 1])
     self.stats.set_text(self.status_text[:self.stat_label_chars])
 
 # Text background updater

@@ -21,8 +21,11 @@ import pygame
 
 from ..Editor.Cath_Editor_Extras import update_text_info
 from ..EVENTS.GUI_METHODS        import status_update
+from ..Editor.SHARED             import clear_selected
+from ..EVENTS.GUI_SELECT         import build_selection
               
 def update_events_mouse(self, event):
+
     # Get Mouse Position and add relative offset (window XY)
     
     x, y        = pygame.mouse.get_pos()
@@ -31,6 +34,7 @@ def update_events_mouse(self, event):
     self.mouseX = x
     self.mouseY = y + self.EditorY
     
+    #self.top_label.set_text(str(self.mouse_X + 1)+":"+str(self.mouse_Y))
     if event.type == pygame.MOUSEBUTTONDOWN:
         
         self.mouse = 1
@@ -40,15 +44,15 @@ def update_events_mouse(self, event):
         if (x > 0 and x < (self.surface_size[0] - self.scroll_W) and y > 0 and
             y < (self.surface_size[1]- self.scroll_W)):
             
-            self.scrolled = 0
+            self.scrolled      = 0
             self.CATH.no_entry = 0
+            
             # Get clicks at centre of character by creating an offset
             x = x - (self.CATH.text_width // 2)
             y = y + (self.CATH.text_width // 2)
             
             self.character_X = round(x / self.CATH.text_width)
             self.line_Y      = round(y / self.text_size)
-            #print('inside', x, y,  self.character_X, self.line_Y )
             
             # Make sure cursor line position is less than total amount of lines
             if self.line_Y > len(self.CATH.lines):
@@ -63,6 +67,7 @@ def update_events_mouse(self, event):
             if hit_Y < surface_size[1]:
             
                 # Make sure cursor falls inside line length
+                
                 line_length    = len(self.CATH.lines[self.line_Y + self.CATH.real - 1])
                 real_X_pos     = self.character_X + self.CATH.new_pos
                 relative_X_pos = self.character_X
@@ -85,7 +90,23 @@ def update_events_mouse(self, event):
         
     if event.type == pygame.MOUSEBUTTONUP:
         
-        #x, y = self.window_position
+        # Check if we need to clear selection
+        if (self.sel_start[0] == self.mouse_X + self.CATH.new_pos and
+            self.sel_start[1] == self.mouse_Y + self.CATH.real):
+            
+            self.selecting     = 0
+            clear_selected(self)
+            
+        elif self.V_scr_grabbed == 0 and self.H_scr_grabbed == 0:
+            
+            self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
+            self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
+            
+            if self.sel_end[0] > self.release_line_len:
+                self.sel_end[0] = self.release_line_len
+            self.selected =1
+            build_selection(self)
+        
         self.V_col         = 100
         self.H_col         = 100
         self.mouse         = 0
@@ -94,4 +115,7 @@ def update_events_mouse(self, event):
         self.V_release     = 0
         self.H_release     = 0
         self.H_scr_grabbed = 0
-        #update_text_info(self.CATH)
+        self.sel_loop      = 0
+        self.select_scroll = 0
+        self.no_scroll     = 0
+
