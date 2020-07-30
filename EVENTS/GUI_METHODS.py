@@ -63,6 +63,12 @@ def status_update(self, mouse_X = 1, mouse_Y = 1):
     else:
         self.line_length = 0
     self.stats.set_text(self.status_text[:self.stat_label_chars])
+    
+    # If mouse is in writeable area allow text input
+    if (self.mouse_X < self.CATH.max_line_chars and
+        self.mouse_Y < self.CATH.total_lines):
+        
+        self.CATH.no_entry = 0   
 
 # Text background updater
 def update_bg(self, size, ui_manager):
