@@ -101,7 +101,8 @@ class PyEdit_no_gui:
         self.NAVIGATION = [280, 281, 278, 279]
         
         # Writing/ word/ letter variables
-        self.lines         =   [""] 
+        self.lines         =   [""]
+        self.display_lines =   [] 
         self.line          =   0
         self.chars         =   0
         self.home          =   1
@@ -166,6 +167,18 @@ class PyEdit_no_gui:
             
         self.Clip_board = ""#Square(screen, 0, 0, 0, 0, orient = "vertical",
                             #colour = "grey", fill = True, line_width = 0)
+
+    def update_display(self, X):
+    
+        self.display_lines.clear()
+        try:
+            for l in range(self.total_lines):
+                self.display_lines.append("")
+                self.display_lines[l] = self.lines[l + self.real]
+        except: Exception
+        
+        self.max_line_chars += X
+        self.pos_offset = X
         
     # What happens when a key is released
     def key_up(self, key):
