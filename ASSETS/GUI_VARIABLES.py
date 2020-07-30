@@ -153,6 +153,8 @@ def create_gui_variables(self, position):
     self.occurance             = 0         # how many instances of search string found
     self.Occounter             = []        # List which stores with line and position instances (of found search string) reside
     self.re_search             = 0         # 1 = re-run search analysis operation
+    self.search_string         = ""
+    self.replace_string        = ""
     
     self.numbers               = 0 # Do we need character offset for line numbers
     self.only_display          = 0
