@@ -78,9 +78,11 @@ class Cath(pygame_gui.elements.UIWindow):
         self.background       = self.background.convert()
         self.background.fill((0, 0, 0))
         self.parent           = self
-        self.now = 0
+        self.now              = 0
+        
         self.app_path = os.path.dirname(os.path.abspath(__file__))
         print('Current Path:', self.app_path)
+        
         create_gui_variables(self, position)
         create_assets(self, ui_manager)
         
@@ -117,6 +119,10 @@ class Cath(pygame_gui.elements.UIWindow):
         if self.selecting == 1:
             render_selection(self, self.surface_element.image)
         self.CATH.draw(self.surface_element.image)
+        
+        # Update Scroll Bars
+        self.H_scroll_bg.draw(self.surface_element.image)
+        self.V_scroll_bg.draw(self.surface_element.image)
         render_Vscroll(self, self.surface_element.image)
         render_Hscroll(self, self.surface_element.image)
         select_text(self)
