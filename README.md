@@ -26,14 +26,10 @@ You will then find the entry 'CATH' under the tools drop-down menu.
 Currently moving the window results in mouse faults as relative mouse coordinates don't have a way to be updated yet.
 However window resizing does work if resized from the bottom or right boundaries.
 
-Also text selecting only works in the GUI. It has no affect on text editing yet. The code needs updating so there are no copy/ paste functions.
-
 A few of the buttons in the options menu aren't functional either. However text re-sizing works and theme chaning mainly 
 works too.
 
-The search, replace functions work for the most part. The 'Goto' button will work and vertical scrolling works too.
-
-Things like Horizontal Scrolling will be integreted soon and most other functions too.
+The search, replace functions don't work for the most part. The 'Goto' button will work and vertical scrolling works too.
 
 Happy Editing...
 
