@@ -76,8 +76,6 @@ def option_buttons(self, event, ui_manager):    # PyGame_Gui Button Presses
                 if len(self.CATH.lines) > self.CATH.max_lines:
                     self.CATH.total_lines = self.CATH.max_lines
                 else: self.CATH.total_lines = len(self.CATH.lines)
-                    
-                self.CATH.update_display(0)
                 
                 GOTO_line(self, self.CATH.current_line)
                 self.top_label.set_text(("TEXT SIZE: " + str(self.text_size))[:self.top_label_chars])
@@ -97,8 +95,7 @@ def option_buttons(self, event, ui_manager):    # PyGame_Gui Button Presses
                 if len(self.CATH.lines) > self.CATH.max_lines:
                     self.CATH.total_lines = self.CATH.max_lines
                 else: self.CATH.total_lines = len(self.CATH.lines)
-                
-                self.CATH.update_display(0)
+
                 self.top_label.set_text(("TEXT SIZE: " + str(self.text_size))[:self.top_label_chars])
                 print('chars',self.CATH.max_line_chars ,'lines',self.CATH.max_lines)
         
