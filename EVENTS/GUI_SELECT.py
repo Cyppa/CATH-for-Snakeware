@@ -6,13 +6,13 @@ from ..Editor.SHARED import clear_selected, Col
 def select_text(self):
     
     surface = self.surface_element.image
-    width   = self.text_width
     
     # If mouse is pressed down lets get/ create some vars
     # needed for selecting text
     if (self.mouse == 1 and self.sel_loop == 0 and
         (self.mouse_X) < self.CATH.max_line_chars and
-        (self.mouse_Y) < self.CATH.total_lines - 1):
+        (self.mouse_Y) < self.CATH.total_lines - 1 and
+        self.H_scr_grabbed == 0):
         
         pos                = self.line_len - self.CATH.new_pos
         if pos < 0: pos    = 0
@@ -72,10 +72,10 @@ def build_selection(self):
     # If we only need one line
     if start[1] == end[1]:
         # Top Line
-        self.selX1 = (start[0] * self.text_width) + self.EditorX
-        self.selY1 = (start[1] * self.text_size)  + self.EditorY
-        self.selX2 = ((end[0] - start[0])  * self.text_width) + self.EditorX
-        self.selY2 = self.text_size
+        self.selX1 = (start[0] * self.CATH.text_width) + self.EditorX
+        self.selY1 = (start[1] * self.CATH.text_size)  + self.EditorY
+        self.selX2 = ((end[0] - start[0])  * self.CATH.text_width) + self.EditorX
+        self.selY2 = self.CATH.text_size
         # Clear bottom line
         self.selX1a, self.selY1a = 0, 0
         self.selX2a, self.selY2a = 0, 0
@@ -88,16 +88,16 @@ def build_selection(self):
         if (start[1] >= end[1] + 1):
                 start, end = end, start
         # Top Line
-        pos = (start[0] * self.text_width) + self.EditorX
+        pos = (start[0] * self.CATH.text_width) + self.EditorX
         self.selX1 = pos
-        self.selY1 = (start[1] * self.text_size)  + self.EditorY
-        self.selX2 = (self.CATH.max_line_chars * self.text_width) - pos + self.EditorX
-        self.selY2 = self.text_size
+        self.selY1 = (start[1] * self.CATH.text_size)  + self.EditorY
+        self.selX2 = (self.CATH.max_line_chars * self.CATH.text_width) - pos + self.EditorX
+        self.selY2 = self.CATH.text_size
         # Bottom Line
         self.selX1a = self.EditorX
-        self.selY1a = (end[1] * self.text_size)  + self.EditorY
-        self.selX2a = ((end[0]) * self.text_width)
-        self.selY2a = self.text_size
+        self.selY1a = (end[1] * self.CATH.text_size)  + self.EditorY
+        self.selX2a = ((end[0]) * self.CATH.text_width)
+        self.selY2a = self.CATH.text_size
         if (start[1] == end[1] + 1) or (start[1] == end[1] - 1):
             # Clear Body / Lines of Selected Text
             self.bX1,    self.bY1    = 0, 0
@@ -107,18 +107,18 @@ def build_selection(self):
             # We need total lines minus top and bottom lines
             line_amount = end[1] - start[1] - 1
             self.bX1    = self.EditorX
-            self.bY1    = ((start[1] + 1) * self.text_size)  + self.EditorY
-            self.bX2    = self.CATH.max_line_chars * self.text_width
-            self.bY2    = self.text_size * line_amount
+            self.bY1    = ((start[1] + 1) * self.CATH.text_size)  + self.EditorY
+            self.bX2    = self.CATH.max_line_chars * self.CATH.text_width
+            self.bY2    = self.CATH.text_size * line_amount
         
 # draw selection box        
 def render_selection(self, surface):
     # Stop rendering if outside of visible area
-    if self.selY1 > (self.EditorY - self.text_size):
+    if self.selY1 > (self.EditorY - self.CATH.text_size):
         # Top line
         pygame.draw.rect(surface,Col("grey", 50),
                         (self.selX1, self.selY1, self.selX2, self.selY2))
-    if self.selY1a > (self.EditorY - self.text_size):    
+    if self.selY1a > (self.EditorY - self.CATH.text_size):    
         # Bottom line
         pygame.draw.rect(surface,Col("grey", 50),
                         (self.selX1a, self.selY1a, self.selX2a, self.selY2a))
