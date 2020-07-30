@@ -91,7 +91,7 @@ def update_events_mouse(self, event):
     if event.type == pygame.MOUSEBUTTONUP:
         
         # Check if we need to clear selection
-        if (self.sel_start[0] == self.mouse_X + self.CATH.new_pos and
+        if (self.sel_start[0] == self.mouse_X - 1 + self.CATH.new_pos and
             self.sel_start[1] == self.mouse_Y + self.CATH.real):
             
             self.selecting     = 0
