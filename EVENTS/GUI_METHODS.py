@@ -57,8 +57,11 @@ def status_update(self, mouse_X = 1, mouse_Y = 1):
                             "  ||  Pos: " + str(self.cur_pos) + " / " + str(self.chars) +
                             "  ||  CAPS: " +  str(self.caps) + "  ||  MOUSE: " + str(self.mouse_X + self.CATH.new_pos)
                             + " : " + str(self.mouse_Y + self.CATH.real))        
-    
-    self.line_length = len(self.CATH.lines[self.mouse_Y + self.CATH.real - 1])
+    try:
+        self.line_length = len(self.CATH.lines[self.mouse_Y + self.CATH.real - 1])
+    except: Exception
+    else:
+        self.line_length = 0
     self.stats.set_text(self.status_text[:self.stat_label_chars])
 
 # Text background updater

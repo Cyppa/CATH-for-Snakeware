@@ -95,6 +95,7 @@ def update_events_mouse(self, event):
             self.sel_start[1] == self.mouse_Y + self.CATH.real):
             
             self.selecting     = 0
+            self.selected = 0
             clear_selected(self)
             
         elif self.V_scr_grabbed == 0 and self.H_scr_grabbed == 0:

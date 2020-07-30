@@ -50,7 +50,7 @@ def update_Hscroll(self):
             self.H_scr_grab    = self.mouseX
             self.H_scr_grabbed = 1
             self.H_release     = 1
-            self.H_col         = 50
+            self.H_col         = 25
             self.grab_char     = self.CATH.new_pos
             self.CATH.search   = 0
             self.CATH.no_entry = 1
@@ -83,4 +83,4 @@ def render_Hscroll(self, surface):
             self.H_scroll_E = (self.surface_size[0] - self.scroll_W) - (self.H_bar_length + self.offset)
         
         pygame.draw.rect(surface, Col("grey", self.H_col),
-                        (self.H_scroll_E, self.surface_size[1] - self.scroll_W, self.H_bar_length, self.scroll_W))
+                        (self.H_scroll_E, self.surface_size[1] - self.scroll_W - 1, self.H_bar_length, self.scroll_W))

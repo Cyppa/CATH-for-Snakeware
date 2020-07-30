@@ -49,7 +49,7 @@ def update_Vscroll(self):
             self.V_scr_grab    = self.mouseY
             self.V_scr_grabbed = 1
             self.V_release     = 1
-            self.V_col         = 50
+            self.V_col         = 25
             self.grab_line     = self.CATH.real
             self.CATH.search   = 0
             
@@ -59,8 +59,6 @@ def update_Vscroll(self):
             # If bar is back at top make sure to display text from line 1
             if self.scroll_TOP == self.V_scroll_Y:
                 self.CATH.real = 0
-                for l in range(len(self.CATH.display_lines)):
-                    self.CATH.display_lines[l] = self.CATH.lines[l]
             
             # Convert pixel movement into line scrolling
             # 'X amount of pixels scrolls Y amount of lines'
@@ -69,10 +67,6 @@ def update_Vscroll(self):
                 
                 move           = self.scroll_TOP - self.V_scroll_Y
                 self.CATH.real = round(move * self.V_unit)
-                
-                # Update display
-                for l in range(len(self.CATH.display_lines)):
-                    self.CATH.display_lines[l] = self.CATH.lines[l + self.CATH.real]
                     
             self.scroll_TOP =  self.V_move + self.temp_var
             
@@ -85,4 +79,4 @@ def render_Vscroll(self, surface):
             self.scroll_TOP = self.body_Y - self.V_bar_length
         
         pygame.draw.rect(surface,Col("grey", self.V_col),
-                        (self.V_scroll_X, self.scroll_TOP, self.scroll_W, self.V_bar_length))
+                        (self.V_scroll_X - 1, self.scroll_TOP, self.scroll_W, self.V_bar_length))

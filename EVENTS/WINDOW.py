@@ -19,6 +19,7 @@
 
 import pygame, pygame_gui
 from ..EVENTS.GUI_METHODS import update_bg
+from ..Editor.SQUARE      import Square
 
 ### From Main File
 def window_move_events(self, event):
@@ -96,7 +97,7 @@ def update_window_size(self):
     # Keep Window size updated
     self.surface_size     = self.get_container().get_size()
     self.panel_W          = self.surface_size[0]
-    
+        
     # Adjust labels' text to resizing
     self.label_W          = self.panel_W - (self.offset * 2) - (self.buttonX * 2)
     self.stat_label_chars = self.label_W // self.text_width
@@ -124,6 +125,15 @@ def update_window_size(self):
         self.CATH.max_line_chars = round(self.panel_W / self.CATH.text_width) - 3
         print('Max Line Characters:', self.CATH.max_line_chars, 'new=pos', self.CATH.new_pos)
         
+        # Update Scroll Bars
+        self.V_scroll_bg = Square(self.surface_element.image, self.V_scroll_X - 2, self.V_scroll_Y - 2,
+                                 self.scroll_W + 1, self.surface_size[1] - self.V_scroll_Y + 1,
+                                 orient = "vertical", colour = "grey", fill = True, line_width = 1)
+        
+        self.H_scroll_bg = Square(self.surface_element.image, self.EditorX - 2, self.surface_size[1] - self.scroll_W - 2,
+                                 self.scroll_W + 1, self.surface_size[0] - self.scroll_W - 2,
+                                 orient = "horizontal", colour = "grey", fill = True, line_width = 1)
+        
     if self.prev_sizeY != self.surface_size[1]:
         # Update CATH height
         self.CATH.max_lines = round((self.surface_size[1] - self.EditorY)/ self.CATH.text_size) - 2
@@ -131,10 +141,7 @@ def update_window_size(self):
         if self.prev_sizeY < self.surface_size[1]:
             ## Find out if bottom line has appeared on screen...
             ## NEEDS SERIOUS WORK! IS NOT WORKING YET...
-            if self.CATH.max_lines < len(self.CATH.display_lines):
-                print("BOTTOM LINE HIT!!!")
-            else:
-                print('GROWING')  
+            print('GROWING')  
         else:
             print('SHRINKING')
         self.CATH.update_max_lines()
@@ -143,3 +150,12 @@ def update_window_size(self):
         
         if self.surface_element: self.surface_element.kill()
         update_bg(self, self.surface_size, self.ui_manager)
+        
+        # Update Scroll Bars
+        self.V_scroll_bg = Square(self.surface_element.image, self.V_scroll_X - 2, self.V_scroll_Y - 2,
+                                 self.scroll_W + 1, self.surface_size[1] - self.V_scroll_Y + 1,
+                                 orient = "vertical", colour = "grey", fill = True, line_width = 1)
+        
+        self.H_scroll_bg = Square(self.surface_element.image, self.EditorX - 2, self.surface_size[1] - self.scroll_W - 2,
+                                 self.scroll_W + 1, self.surface_size[0] - self.scroll_W - 2,
+                                 orient = "horizontal", colour = "grey", fill = True, line_width = 1)
