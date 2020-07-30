@@ -87,7 +87,6 @@ def save_load(self, option, file_name):
         print(file_name)
         self.CATH.open_file = 1
         self.CATH.lines.clear()
-        self.CATH.display_lines.clear()
         file_open = open(file_name, 'r')
         _file_ = file_open.readlines()
         
@@ -101,11 +100,7 @@ def save_load(self, option, file_name):
         else:
             self.CATH.total_lines = self.CATH.max_lines
         
-        for l in range(self.CATH.total_lines):
-            self.CATH.display_lines.append("")
-            self.CATH.display_lines[l] = self.CATH.lines[l]
-        
-        self.CATH.chars                = len(self.CATH.display_lines[0])
+        self.CATH.chars                = len(self.CATH.lines[self.CATH.real])
         self.CATH.pos                  = 0
         self.CATH.current_line         = 1
         self.CATH.display_current_line = 1
@@ -144,17 +139,11 @@ def GOTO_line(self, integer, pos = 0):
         #self.scroll_TOP_       = self.scrollY + self.move_bar
         
     if integer < self.CATH.max_lines and integer < len(self.CATH.lines):
-        try:
-            for l in range(self.CATH.max_lines):
-                self.CATH.display_lines[l] = self.CATH.lines[l]
-        except: Exception
         self.CATH.display_current_line = integer
         do()
         
     elif integer < len(self.CATH.lines):
         diff = integer - self.CATH.max_lines
-        for l in range(self.CATH.max_lines):
-            self.CATH.display_lines[l] = self.CATH.lines[l + diff]
         self.CATH.display_current_line = self.CATH.max_lines
         do()  
     else:

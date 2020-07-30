@@ -67,11 +67,13 @@ class Square:
         self.p3, self.p4  = (self.x2, self.y2), (self.x1, self.y2)
         self.D            = [self.p1, self.p2, self.p3, self.p4]
         
+        if self.orient == "horizontal":
+                self.width, self.length = self.length, self.width
+                
     def draw(self, screen):
         
         if self.fill == True:
-            if self.orient == "horizontal":
-                self.width, self.length = self.length, self.width
+            
             if self.colour == "grey": CX = 50
             else: CX = 100
             P.draw.rect(screen, Col(self.colour, CX),
@@ -82,3 +84,4 @@ class Square:
             else: C = 70
             P.draw.line(screen, Col(self.colour, C), self.D[l], self.D[(l+1)%4],
                         self.line_width)
+            

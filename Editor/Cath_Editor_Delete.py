@@ -23,7 +23,7 @@ from ..Editor.Cath_Editor_Select import remove
 # Delete Key
 def delete(self):
     # If there's a selection just clear that selection
-    if self.selected == 1: remove(self, self)
+    if self.parent.selected == 1: remove(self)
         
     # Otherwise act as normal
     else:
@@ -49,6 +49,7 @@ def delete(self):
             # Get the difference between real and displayed lines
             difference        = self.total_lines - self.display_current_line + 1
             difference_length = self.display_current_line + difference            
+            """
             # Update displayed lines with real lines
             for l in range(self.display_current_line, difference_length):
                 try:
@@ -60,8 +61,8 @@ def delete(self):
                         self.max_lines   = len(self.lines) -1
                         self.total_lines = len(self.lines) -1
                     break
+            """
             # Remove last line of main list        
             self.lines.pop()
-        # Remove any DEL formatting character
-        self.display_lines[self.i - self.real] = self.current_text        
+        # Remove any DEL formatting character       
         update_text_info(self)

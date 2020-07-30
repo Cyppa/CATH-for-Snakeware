@@ -36,33 +36,20 @@ def enter(self):
         self.chars = 0
         self.pos   = 0
         self.lines.insert(self.i + 1, "")                 # Insert blank line into list/ file
-        self.display_lines.insert(self.i-self.real+1, "") # Insert blank line into list/ screen
-        
-        if self.display_current_line == self.total_lines:
-            self.display_lines.pop(0)
-            self.display_lines.append("")
-        else: self.display_current_line += 1
         
     # If cursor is NOT at end of line
     elif self.pos != len(self.current_text):
         self.lines[self.i] = self.before                          # Get text of line that is before cursor
         self.lines.insert(self.i+1, self.after)                   # Insert all text after cursor on a new line to file list
-        self.display_lines.insert(self.i-self.real+1, self.after) # Insert all text after cursor on a new line to screen
         self.pos   = 0                                            # Reset cursor to line beginning
-        self.display_lines[self.i - self.real] = self.lines[self.i]
         
         # Current displayed Line is the bottom, remove top line from screen
-        if self.display_current_line == self.total_lines:
-            self.display_lines.pop(0)
-        else: self.display_current_line += 1
-    
+    if self.display_current_line < self.total_lines:
+        self.display_current_line += 1
+        
     self.current_line += 1
     update_text_info(self)
     self.enter         = 1
-    
-    # If length of displayable lines is too much remove uneeded line
-    if len(self.display_lines) > self.max_lines - 1:
-        self.display_lines.pop(self.max_lines - 1)
         
     # Bring cursor and screen to satrt of line
     key_home(self)
@@ -93,7 +80,6 @@ def add_space(self, what):
         self.current_text                      = self.before + what + self.after
         self.lines[self.i]                     = self.current_text
         self.pos += amount
-        self.display_lines[self.i - self.real] = self.current_text
         update_text_info(self)
         clear_selected(self)
         
@@ -105,7 +91,6 @@ def add_space(self, what):
             self.current_text = self.before + what + self.after[amount:]
         
         self.lines[self.i]                     = self.current_text
-        self.display_lines[self.i - self.real] = self.current_text
         self.pos += amount
     
     # Do we need to scroll horizontally?

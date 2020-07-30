@@ -19,7 +19,7 @@
 
 import pygame as P
 from ..Editor.SHARED import Col, clear_selected, update_scroll_info
-from ..Editor.Cath_Editor_Select import copy_paste, select, cut, remove
+from ..Editor.Cath_Editor_Select import copy_paste, cut, remove
 from ..Editor.Cath_Editor_Extras import update_text_info, reset, write_area, clip_nav
 from ..Editor.Cath_Editor_Key import key_down
 from ..Editor.SQUARE import Square
@@ -64,6 +64,7 @@ class PyEdit_no_gui:
         self.end_point         =   []
         
         # Editor variables
+        self.real              =   0
         self.save_file         =   0
         self.open_file         =   0
         self.max_line_chars    =   round(self.width / self.text_width) - 2
@@ -100,8 +101,7 @@ class PyEdit_no_gui:
         self.NAVIGATION = [280, 281, 278, 279]
         
         # Writing/ word/ letter variables
-        self.lines         =   [""]
-        self.display_lines =   [] 
+        self.lines         =   [""] 
         self.line          =   0
         self.chars         =   0
         self.home          =   1
@@ -124,13 +124,11 @@ class PyEdit_no_gui:
             E = Exception
             print(E)
         else:
-            # Put only the amount of lines which will be visible into 'self.display_lines' list
+            # Put only the amount of lines which will be visible into list
             if len(self.lines) > self.max_lines:
                 self.total_lines = self.max_lines
             else: self.total_lines = len(self.lines)
                 
-            for l in range(self.total_lines): 
-                self.display_lines.append(self.lines[l])
         print('File Lines =', len(self.lines), 'Total Lines', self.total_lines)
         
         self.lines.append("")
@@ -139,21 +137,14 @@ class PyEdit_no_gui:
         self.display_pos          =   0
         self.current_line         =   1
         self.display_current_line =   self.current_line
-        self.current_text         =   self.display_lines[0]
+        self.current_text         =   self.lines[0]
         self.chars                =   len(self.current_text)
         self.current_pos          =   self.pos
         self.before               =   self.current_text[:self.pos]
         self.after                =   self.current_text[self.pos:]
         self.i                    =   self.current_line - 1
         self.current_text         =   self.lines[self.i]
-        self.paste                =   [] 
-        self.cache                =   open(dir_ + "/apps/tools/CATH/Editor/cache.txt", 'r').readlines()
-        self.cacheX               =   len(self.cache)
-        self.cached_line          =   ""
-        self.cached_list          =   []
-        self.show_clip            =   0
-        self.cached_length        =   self.max_line_chars - (100 // self.text_size) - 8
-        self.start_end            =   []
+        self.paste                =   []
         
         #General variables
         self.running      =   True
@@ -176,20 +167,6 @@ class PyEdit_no_gui:
         self.Clip_board = ""#Square(screen, 0, 0, 0, 0, orient = "vertical",
                             #colour = "grey", fill = True, line_width = 0)
         
-
-    # Update Displayed lines from external module
-    def update_display(self, X):
-        
-        self.display_lines.clear()
-        try:
-            for l in range(self.total_lines):
-                self.display_lines.append("")
-                self.display_lines[l] = self.lines[l + self.real]
-        except: Exception
-        
-        self.max_line_chars += X
-        self.pos_offset = X
-    
     # What happens when a key is released
     def key_up(self, key):
     
@@ -211,28 +188,22 @@ class PyEdit_no_gui:
         
         # Backspace release
         if self.no_entry == 0 and key == 8: self.back_space = 0
-        """
-        # CTRL - V Used ofr pasting text and Clipboard use
+        
+        # CTRL - V Used for pasting text and Clipboard use
         if key == 118:
-            if self.show_clip == 0 and len(open("./Editor/cache.txt").readlines()) > 0:
-                copy_paste(self, "paste")
-                self.show_clip = 0
-            else:
-                if len(open("./cache.txt").readlines()) > 0:
-                    copy_paste(self, "paste")
-                    self.show_clip = 0
-                
-            self.paste     = 0
-            self.start_end.clear()
-        """
+            pass
+            
+        
     def draw(self, surface):
+        
+        self.display_pos = self.pos - self.new_pos
         
         def render_body_of_text(self, surface):
         
             font = P.font.Font(self.FONT, self.text_size)
             
-            for l in range(len(self.display_lines)):             
-                text = self.display_lines[l]
+            for l in range(self.total_lines):             
+                text = self.lines[l + self.real]
                 
                 if self.new_pos > 0:
                     text = text[self.new_pos:self.max_line_chars + self.new_pos]
@@ -242,24 +213,6 @@ class PyEdit_no_gui:
        
                 Text = font.render(text, True, Col(self.font_colour))
                 surface.blit(Text, (self.X, self.Y + (l * self.text_size)))
-        
-        def render_clip_board(self, surface):
-            
-            self.clip_board.draw(surface)
-                    
-            # Render Number
-            num      = str(self.cacheX + 1) + ": "
-            num_text = font.render(num, True, Col("black"))
-            Y        = (((self.current_line - self.real - 1) * self.text_size)
-                        + self.EditorY + round(self.offset * 2.5))
-            surface.blit(num_text, (55, Y + self.text_size))
-            
-            # Render text
-            text      = self.cached_line[:self.cached_length]
-            clip_text = font.render(text, True, Col("white"))
-            Y         = (((self.current_line - self.real - 1) * self.text_size)
-                         + self.EditorY + round(self.offset * 2.5))
-            surface.blit(clip_text, (55 + (self.text_size * 1), Y + self.text_size))
         
         # Render Cursor
         def render_cursor(self, surface):
@@ -309,9 +262,6 @@ class PyEdit_no_gui:
         
         render_cursor(self, surface)
         render_body_of_text(self, surface)
-        # Render ClipBoard if needed
-        if self.show_clip == 1:
-            render_clip_board(self, surface)
 
     # Get the difference between the current displayed line and the actual line
     def get_over(self):
@@ -342,23 +292,9 @@ class PyEdit_no_gui:
         # TODO:
         # IF bottom lines appears at bottom stop extending display lines
         # Only grow lines if all lines of file are not on screen
-        if len(self.display_lines) < len(self.lines) - 1:
-            
-            if len(self.lines) > self.max_lines:
-                rang = self.max_lines
-            elif len(self.display_lines) > self.max_lines:
-                rang = len(self.display_lines)
-            else: rang = len(self.lines)
-                
-            self.display_lines.clear()
-            
-            for l in range(rang):
-                self.display_lines.append("")
-                self.display_lines[l] = self.lines[l + self.real]
-            
-            if len(self.lines) - 1 < self.max_lines:
-                self.total_lines = len(self.lines) - 1
-            else: self.total_lines = self.max_lines
+        if len(self.lines) - 1 < self.max_lines:
+            self.total_lines = len(self.lines) - 1
+        else: self.total_lines = self.max_lines
             
     print('Cath Editor Backend Initialised') 
                 

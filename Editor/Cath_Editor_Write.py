@@ -35,12 +35,12 @@ def write(self, key):
             
             update_text_info(self)
             
-            if self.selected == 1:
-                cut(self, self.start, self.end)
+            if self.parent.selected == 1:
+                cut(self)
                 clear_selected(self)
                 
-            self.selected      = 0
-            self.selected = 0
+            self.parent.selected = 0
+            self.parent.selecting = 0
             
             def display(key, upper = 0):
                 
@@ -63,49 +63,30 @@ def write(self, key):
             self.pos += 1
             self.lines[self.i] = self.current_text
             update_text_info(self)
-            self.display_lines[self.display_current_line - 1] = self.current_text
             
             #if self.pos > self.max_line_chars: self.new_pos += 1
             # Horizontal scrolling offset
             if self.pos >= self.max_line_chars + self.new_pos:
                 self.new_pos += 1
-        """
+        
         # CTRL / ALT, etc combos
         elif self.ctrl == 1:
             
-            if self.selected == 1:
+            if self.parent.selected == 1:
                 # Key 'C' Copy
                 if key == 99:
                     self.selected_text.clear()
-                    copy_paste(self, "copy", self)
+                    copy_paste(self, "copy")
                     self.cacheX = 0
-                
+                    
                 # Key 'X' Cut
                 if key == 120:
                     self.selected_text.clear()
-                    copy_paste(self, "copy", self)
-                    remove(self, self)
+                    copy_paste(self, "copy")
+                    remove(self)
                     
             # Key 'V' Paste
             if key == 118:
-                
-                self.start_point.clear()
-                self.end_point.clear()
-                self.cached_list.clear()
-                self.start_end.clear
-
-                self.paste       = 1
-                self.cached_line = ""
-                self.cache       = open("./Editor/cache.txt", 'r').readlines()
-
-                # Search through history cache file, each entry is separated by the lines '[[' and ']]'
-                for l in range(len(self.cache)):
-                    if "[" == self.cache[l][0] and "[" == self.cache[l][1] and "\n" == self.cache[l][2]:
-                        self.start_point.append(l + 1)
-                    if "]" == self.cache[l][0] and "]" == self.cache[l][1] and "\n" == self.cache[l][2]:
-                        self.end_point.append(l - 1)
-
-                # Create a list of individual histroy entry start and end point
-                for l in range(len(self.start_point)):
-                    self.start_end.append([self.start_point[l], self.end_point[l]])
-        """
+                if len(self.selected_text) > 0:
+                    copy_paste(self, "paste")   
+                self.paste = 0

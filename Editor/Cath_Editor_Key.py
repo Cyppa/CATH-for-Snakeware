@@ -19,7 +19,7 @@
 
 import pygame as P
 from ..Editor.SHARED                 import Col, clear_selected, update_scroll_info, GOTO_line
-from ..Editor.Cath_Editor_Select     import copy_paste, select, cut, remove
+from ..Editor.Cath_Editor_Select     import copy_paste, cut, remove
 from ..Editor.Cath_Editor_Extras     import update_text_info, reset, write_area, clip_nav, key_home
 from ..Editor.Cath_Editor_Backspace  import backspace
 from ..Editor.Cath_Editor_Delete     import delete
@@ -79,28 +79,16 @@ def key_down(self, key):
         else:
             # We are at top, bring scroll bar to home/ rest
             self.parent.scroll_TOP = self.parent.V_scroll_Y
-          
+            
         if self.display_current_line > 1:
             self.display_current_line -= 1
-        
-        elif self.display_current_line == 1:
-            # We are on top line
-            # Move screen up and update display
-            if len(self.lines) > self.total_lines:
-                self.display_lines.clear()
                 
-                for l in range(len(self.display_lines)):
-                    self.display_lines[l] = self.lines[l + self.real - 1]
-                
-        self.selected = 0
+        self.parent.selected = 0
+        self.parent.selecting = 0
         clear_selected(self)
         key_home(self)
         update_text_info(self)
     
-    elif (self.no_entry == 0 and key == 273 and self.paste == 1
-          and len(open("./Editor/cache.txt").readlines()) > 0):
-        
-        clip_nav(self, "up")
         
     # DOWN
     if self.no_entry == 0 and key == 274 and self.ctrl == 0:
@@ -124,28 +112,16 @@ def key_down(self, key):
             #We are at the lat line of file
             # Bring bar to rest in its bottom home
             self.parent.scroll_TOP = self.parent.surface_size[1] + self.parent.offset + self.parent.V_bar_length
-        
+            
         if self.display_current_line < self.total_lines:
             self.display_current_line += 1
-        else:
-            # We are at bottom line of screen
-            # Move screen up and update display   
-            if len(self.lines) > self.max_lines:
-                self.display_lines.clear()
-                
-                for l in range(len(self.display_lines)):
-                    self.display_lines[l] = self.lines[l + self.real - 1]
-        
-        self.selected      = 0
+            
         self.selected = 0
+        self.selecting = 0
         clear_selected(self)
         key_home(self)
         update_text_info(self)
-    
-    elif (self.no_entry == 0 and key == 274 and self.paste == 1
-          and len(open("./Editor/cache.txt").readlines()) > 0):
-        
-        clip_nav(self, "down")
+
         
     # LEFT
     if self.no_entry == 0 and key == 276:
@@ -161,7 +137,6 @@ def key_down(self, key):
                 self.new_pos -= 1
             
             update_text_info(self)
-            self.display_lines[self.i - self.real] = self.current_text
             
     # RIGHT
     if self.no_entry == 0 and key == 275:                    
@@ -173,7 +148,6 @@ def key_down(self, key):
             self.selected      = 0
             self.selected = 0
             clear_selected(self)
-            self.display_lines[self.i - self.real] = self.current_text
             
             # If cursor at end of screen but not end of current line:
             # For purposes of horizontal scroling
@@ -197,10 +171,6 @@ def key_down(self, key):
         self.pos                  = 0
         self.display_current_line = 1
         
-        # Update Display
-        for l in range(len(self.display_lines)):
-            self.display_lines[l] = self.lines[l + self.current_line -1]
-        
         update_text_info(self)
         key_home(self)
     
@@ -222,11 +192,6 @@ def key_down(self, key):
         self.display_current_line = self.max_lines
         
         update_text_info(self)
-        
-        # Update Display
-        for l in range(len(self.display_lines)):
-            #rint(l, ":", self.lines[l + self.current_line - self.max_lines])
-            self.display_lines[l] = self.lines[l + self.current_line - self.max_lines] # l + self.real
         
         key_home(self)
     
@@ -286,20 +251,7 @@ def key_down(self, key):
     if self.no_entry == 0 and key == 277:
         write_area(self)
         self.insert = (self.insert + 1) % 2
-        print('self.insert', self.insert)
-     
-    else:
-        """
-        if self.ctrl == 1:
-            # CTRL - S (SAVE)
-            if self.no_entry == 0 and key == 115:
-                self.save_file = 1
-                self.options_text = ""
-                self.current_text = self.options_text
-            # CTRL - O (OPEN)
-            if self.no_entry == 0 and key == 111:
-                self.open_file = 1
-        """    
+
     # Display Character to Screen
     write(self, key)   
                        

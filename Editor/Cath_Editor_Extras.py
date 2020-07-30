@@ -59,9 +59,7 @@ def reset(self):
     if self.total_lines > self.max_lines:
         self.total_lines = self.max_lines
     #unfinished
-    else:
-        disp = len(self.display_lines)
-        diff = self.total_lines - len(self.display_lines)
+
         
 def write_area(self):
     # If text not in displayable are, goto displayable area
