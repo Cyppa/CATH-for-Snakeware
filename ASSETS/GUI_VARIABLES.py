@@ -121,6 +121,7 @@ def create_gui_variables(self, position):
     self.line_len              = 0
     self.selecting             = 0
     self.no_scroll             = 0
+    self.selected              = 0
 
     # Select top / bottom lines Select Cursor
     self.selX1,  self.selY1    = 0, 0

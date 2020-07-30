@@ -26,7 +26,17 @@ from pygame_gui.elements import UIPanel
 from pygame_gui.elements import UITextEntryLine
 from pygame_gui.elements import UIHorizontalSlider
 
+from ..Editor.SQUARE     import Square
+
 def create_assets(self, ui_manager):
+    # Vertical / Horizontal Scroll Troughs
+    self.V_scroll_bg = Square(self.surface_element.image, self.V_scroll_X - 2, self.V_scroll_Y - 2,
+                             self.scroll_W + 1, self.surface_size[1] - self.V_scroll_Y + 1,
+                             orient = "vertical", colour = "grey", fill = True, line_width = 1)
+    
+    self.H_scroll_bg = Square(self.surface_element.image, self.EditorX - 2, self.surface_size[1] - self.scroll_W - 2,
+                             self.scroll_W + 1, self.surface_size[0] - self.scroll_W - 2,
+                             orient = "horizontal", colour = "grey", fill = True, line_width = 1)
     
     self.confirmation_dialog_no_save = None
     self.confirmation_dialog_save    = None
