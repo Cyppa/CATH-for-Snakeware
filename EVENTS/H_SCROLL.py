@@ -24,7 +24,7 @@ def update_Hscroll(self):
     for line in self.CATH.lines:
         if len(line) > self.longest_line: 
             self.longest_line = len(line)
-    
+
     # Do we need Horizontal bar?
     if self.longest_line > self.CATH.max_line_chars:
         
@@ -54,6 +54,8 @@ def update_Hscroll(self):
             self.grab_char     = self.CATH.new_pos
             self.CATH.search   = 0
             self.CATH.no_entry = 1
+            self.grab_cursor   = [self.CATH.pos, self.CATH.display_pos,
+                                  self.CATH.current_line, self.CATH.display_current_line]
             
         if self.H_scr_grabbed == 1: # The amount of X movement of the grabbed bar in pixels
             self.H_move = self.mouseX - self.H_scr_grab

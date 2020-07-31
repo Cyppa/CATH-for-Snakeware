@@ -20,7 +20,7 @@ import pygame
 from ..Editor.SHARED import Col
 
 def update_Vscroll(self):
-        
+    
     ######### Scroll Bar - Home Made ;)
     # Do we need scrollbar, are there more lines of text in file than screen space?
     if len(self.CATH.lines) > self.CATH.max_lines:
@@ -52,6 +52,8 @@ def update_Vscroll(self):
             self.V_col         = 25
             self.grab_line     = self.CATH.real
             self.CATH.search   = 0
+            self.grab_cursor   = [self.CATH.pos, self.CATH.display_pos,
+                                  self.CATH.current_line, self.CATH.display_current_line]
             
         if self.V_scr_grabbed == 1: # The amount of Y movement of the grabbed bar in pixels
             self.V_move = self.mouseY - self.V_scr_grab 

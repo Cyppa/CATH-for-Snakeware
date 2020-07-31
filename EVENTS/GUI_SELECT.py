@@ -9,10 +9,11 @@ def select_text(self):
     
     # If mouse is pressed down lets get/ create some vars
     # needed for selecting text
-    if (self.mouse == 1 and self.sel_loop == 0 and
+    if (self.mouse == 1 and self.sel_loop == 0    and
         (self.mouse_X) < self.CATH.max_line_chars and
-        (self.mouse_Y) < self.CATH.total_lines - 1 and
-        self.H_scr_grabbed == 0):
+        (self.mouse_Y) < self.CATH.total_lines +1 and
+        self.H_scr_grabbed == 0 and
+        self.V_scr_grabbed == 0):
         
         pos                = self.line_len - self.CATH.new_pos
         if pos < 0: pos    = 0
@@ -27,9 +28,9 @@ def select_text(self):
     # Is mouse pressed? Has mouse position changed since it's been pressed?
     if (
         self.mouse == 1 and self.sel_loop == 1 and 
-        (self.sel_start[0] != self.mouse_X     or
-         self.sel_start[1] != self.mouse_Y)    and
-        self.V_scr_grabbed == 0                and
+        (self.sel_start[0] != self.mouse_X or
+         self.sel_start[1] != self.mouse_Y) and
+        self.V_scr_grabbed == 0 and
         self.H_scr_grabbed == 0
         ):
         
@@ -42,23 +43,44 @@ def select_text(self):
         self.selecting = 1
         self.no_scroll = 1
         
-        # Has selection hit bottom line?
-        if self.mouse_Y == self.CATH.max_lines - 1 and self.selecting == 1:
-
+        def select_scroll(self, direction):
+            
+            if direction == "down" or "up"   : speed = self.sel_move_line_speed                
+            if direction == "left" or "right": speed = self.sel_move_char_speed 
             # Start counter
             self.sel_count += 1
-            
             # If counter reaches moving time activate moving speed counter
-            if self.sel_count > 20:
-                move = self.sel_count % self.sel_move_line
-                
+            if self.sel_count > 10:
+                move = self.sel_count % speed
                 # move speed counter has done one cycle: scroll text
                 if move == 0:
-                    
                     # Scroll display
-                    self.CATH.real += 1
-    
-    #if self.mouse
+                    if direction == "down" : self.CATH.real += 1
+                    if direction == "up"   : self.CATH.real -= 1
+                    if direction == "left" : self.CATH.new_pos -= 1
+                    if direction == "right": self.CATH.new_pos += 1
+                    
+        # Has selection hit bottom line?
+        if (self.mouse_Y == self.CATH.max_lines - 1 and
+            self.selecting == 1 and
+            self.CATH.real < len(self.CATH.lines) - 1 - self.CATH.max_lines):
+            select_scroll(self, "down")
+                    
+        # Has selection hit top line?
+        if (self.mouse_Y   <= 1 and
+            self.selecting == 1 and
+            self.CATH.real > 0):
+          select_scroll(self, "up")
+                    
+        # Has selection hit right of line?
+        if (self.mouse_X >= self.CATH.max_line_chars and
+            self.selecting == 1):
+            select_scroll(self, "right")
+                    
+        # Has selection hit left of line?
+        if (self.mouse_X < 1 and self.CATH.new_pos > 0 and
+            self.selecting == 1):
+            select_scroll(self, "left")
                         
 def build_selection(self):
     #self.top_label.set_text('Selecting')

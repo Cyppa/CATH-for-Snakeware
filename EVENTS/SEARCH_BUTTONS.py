@@ -23,7 +23,7 @@ import time, sys, os
 
 from ..Editor.SHARED             import GOTO_line
 from ..Editor.Cath_Editor_Search import search_text, replace_text
-from pygame_gui.elements       import UIButton
+from pygame_gui.elements         import UIButton
 
 def search_buttons(self, event):
     
@@ -33,30 +33,42 @@ def search_buttons(self, event):
        #SEARCH
         if event.ui_element == self.search_down:
             
-            search_text(self, self.search_string, "down")
-            self.CATH.search        = 1
-            self.CATH.cursor_length = len(self.search_string)
-            self.CATH.re_search     = 0
-        
+            if self.search_string != "":
+                search_text(self, self.search_string, "down")
+                self.CATH.search        = 1
+                self.CATH.cursor_length = len(self.search_string)
+                self.CATH.re_search     = 0
+            else:
+                self.top_label.set_text(("NULL SEARCH")[:self.top_label_chars])
+            
         if event.ui_element == self.search_up:
             
-            search_text(self, self.search_string, "up")
-            self.CATH.search        = 1
-            self.CATH.cursor_length = len(self.search_string)
-            self.CATH.re_search     = 0
+            if self.search_string != "":
+                search_text(self, self.search_string, "up")
+                self.CATH.search        = 1
+                self.CATH.cursor_length = len(self.search_string)
+                self.CATH.re_search     = 0
+            else:
+                self.top_label.set_text(("NULL SEARCH")[:self.top_label_chars])
             
         if event.ui_element == self.replace:
             
-            replace_text(self, self.replace_string, "once")
-            self.CATH.search        = 1
-            self.CATH.cursor_length = len(self.search_string)
-            self.CATH.re_search     = 0
+            if self.search_string != "":
+                replace_text(self, self.replace_string, "once")
+                self.CATH.search        = 1
+                self.CATH.cursor_length = len(self.search_string)
+                self.CATH.re_search     = 0
+            else:
+                self.top_label.set_text(("NULL SEARCH")[:self.top_label_chars])
         
         if event.ui_element == self.all:
             
-            replace_text(self, self.replace_string, "all")
-            self.CATH.search        = 1
-            self.CATH.cursor_length = len(self.search_string)
-            self.CATH.re_search     = 0
+            if self.search_string != "":
+                replace_text(self, self.replace_string, "all")
+                self.CATH.search        = 1
+                self.CATH.cursor_length = len(self.search_string)
+                self.CATH.re_search     = 0
+            else:
+                self.top_label.set_text(("NULL SEARCH")[:self.top_label_chars])
             
             
