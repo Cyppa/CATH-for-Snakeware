@@ -91,6 +91,7 @@ def create_gui_variables(self, position):
     self.win_grab              = [0,0]
     self.GRAB                  = [0,0]
     self.grab_line             = 0
+    self.grab_cursor           = [0, 0, 0, 0]
     
     # Horozontal Scrolling
     self.longest_line          = 0
@@ -114,7 +115,8 @@ def create_gui_variables(self, position):
     self.sel_loop              = 0
     self.sel_chars             = 0
     self.sel_count             = 0
-    self.sel_move_line         = 10 # Line Scrolling speed of selection
+    self.sel_move_line_speed   = 5 # Line Scrolling speed of selection
+    self.sel_move_char_speed   = 3
     self.body_lines            = 0
     self.grab_line_len         = 0
     self.select_scroll         = 0
