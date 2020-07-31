@@ -101,8 +101,7 @@ class PyEdit_no_gui:
         self.NAVIGATION = [280, 281, 278, 279]
         
         # Writing/ word/ letter variables
-        self.lines         =   [""]
-        self.display_lines =   [] 
+        self.lines         =   [""] 
         self.line          =   0
         self.chars         =   0
         self.home          =   1
@@ -167,18 +166,6 @@ class PyEdit_no_gui:
             
         self.Clip_board = ""#Square(screen, 0, 0, 0, 0, orient = "vertical",
                             #colour = "grey", fill = True, line_width = 0)
-
-    def update_display(self, X):
-    
-        self.display_lines.clear()
-        try:
-            for l in range(self.total_lines):
-                self.display_lines.append("")
-                self.display_lines[l] = self.lines[l + self.real]
-        except: Exception
-        
-        self.max_line_chars += X
-        self.pos_offset = X
         
     # What happens when a key is released
     def key_up(self, key):
@@ -205,12 +192,11 @@ class PyEdit_no_gui:
         # CTRL - V Used for pasting text and Clipboard use
         if key == 118:
             pass
-            
-        
+              
     def draw(self, surface):
         
         self.display_pos = self.pos - self.new_pos
-        
+        #self.parent.top_label.set_text('dis: ' + str(self.display_pos) + ' p: ' + str(self.pos) + ' n: ' + str(self.new_pos))
         def render_body_of_text(self, surface):
         
             font = P.font.Font(self.FONT, self.text_size)
@@ -275,7 +261,7 @@ class PyEdit_no_gui:
         
         render_cursor(self, surface)
         render_body_of_text(self, surface)
-
+    
     # Get the difference between the current displayed line and the actual line
     def get_over(self):
         over = self.current_line - self.total_lines
@@ -283,6 +269,10 @@ class PyEdit_no_gui:
     
     # Get info about the current cursor position + other stuff
     def get_pos(self):
+        # This next statement stops CATH crashing when selecting multiple lines of
+        # text from the bottom line upwards....
+        #if self.current_line > len(self.lines):
+        #    self.current_line > len(self.lines)
         
         pos = [self.pos, self.current_line, len(self.lines[self.current_line - 1]),
                len(self.lines) - 1, self.caps, self.total_lines]

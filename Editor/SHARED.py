@@ -124,7 +124,8 @@ def clear_selected(self, cursor = 1):
     self.CATH.bX1,    self.CATH.bY1    = 0, 0
     self.CATH.bX2,    self.CATH.bY2    = 0, 0
 
-# Jump to Line #
+# Jump to Line # Due to a Circular import error this method exists in 2 places
+# Here and in Cath_Editor_Extras.py
 def GOTO_line(self, integer, pos = 0):
     
     def do():
@@ -133,10 +134,8 @@ def GOTO_line(self, integer, pos = 0):
         self.CATH.display_pos  = 0
         update_text_info(self.CATH)
         self.parent.top_label.set_text(("MOVED!")[:self.parent.top_label_chars])
-        self.parent.scrolled          = 0
+        self.parent.scrolled   = 0
         get_current_over       = self.CATH.current_line - self.CATH.max_lines
-        #self.move_bar          = get_current_over * self.move_lines
-        #self.scroll_TOP_       = self.scrollY + self.move_bar
         
     if integer < self.CATH.max_lines and integer < len(self.CATH.lines):
         self.CATH.display_current_line = integer

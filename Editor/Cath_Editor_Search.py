@@ -29,20 +29,11 @@ def replace_text(self, replace_string, amount):
             for l in range(len(self.CATH.lines)):
                 if self.search_string in self.CATH.lines[l]:
                     self.CATH.lines[l] = self.CATH.lines[l].replace(self.search_string, replace_string)
-        # Remeber make 'number' dynamic...
-        if self.numbers == 1:
-            number = 4
-        else: number = 0
-        
-        for l in range(len(self.CATH.display_lines)-1):
-            self.CATH.display_lines[l] = self.CATH.lines[l]
-            
-        self.CATH.update_display(number)
-        
+
         if amount == "once":
             
             pos  = self.Occounter[self.occurance - 1][1]
-            l    = list(self.CATH.display_lines[self.CATH.display_current_line - 1])
+            l    = list(self.CATH.lines[self.CATH.current_line - 1])
             lenn = len(self.search_string)
             
             del l[pos - 1:pos - 1 + lenn]
@@ -51,7 +42,6 @@ def replace_text(self, replace_string, amount):
             l_after  = l[pos - 1:]
             l        = l_before + replace_string + l_after
             
-            self.CATH.display_lines[self.CATH.display_current_line - 1] = l
             self.CATH.lines[self.CATH.current_line - 1] = l
         
         self.re_search = 1
@@ -98,12 +88,12 @@ def search_text(self, search_string, direction):
         
             # Update Cursor Position
             try:
-                line                           = self.Occounter[self.occurance - 1][0]
-                pos                            = self.Occounter[self.occurance - 1][1]
+                line                   = self.Occounter[self.occurance - 1][0]
+                pos                    = self.Occounter[self.occurance - 1][1]
                 
                 GOTO_line(self, line)
-                self.CATH.display_pos          = pos - 1 - self.CATH.new_pos
-                self.CATH.pos                  = pos - 1
+                self.CATH.display_pos  = pos - 1 - self.CATH.new_pos
+                self.CATH.pos          = pos - 1
                 
                 # Is found text off screen to the left?
                 if self.CATH.pos < self.CATH.new_pos:

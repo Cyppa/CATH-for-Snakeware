@@ -22,6 +22,31 @@ import time
 
 from ..Editor.SQUARE import Square
 
+# Jump to Line # Due to a Circular import error this method exists in 2 places
+# Here and in SHARED.py
+def GOTO_line(self, integer, pos = 0):
+    
+    def do():
+        self.CATH.current_line = integer
+        self.CATH.pos          = 0
+        self.CATH.display_pos  = 0
+        update_text_info(self.CATH)
+        self.parent.top_label.set_text(("MOVED!")[:self.parent.top_label_chars])
+        self.parent.scrolled   = 0
+        get_current_over       = self.CATH.current_line - self.CATH.max_lines
+        
+    if integer < self.CATH.max_lines and integer < len(self.CATH.lines):
+        self.CATH.display_current_line = integer
+        do()
+        
+    elif integer < len(self.CATH.lines):
+        diff = integer - self.CATH.max_lines
+        self.CATH.display_current_line = self.CATH.max_lines
+        do()  
+    else:
+        self.parent.top_label.set_text(("Out Of Range!")[:self.parent.top_label_chars])
+        print("Too Far!")
+
 # Bring cursor and screen to character position 0
 def key_home(self):
     
