@@ -99,13 +99,15 @@ def update_events_mouse(self, event):
             
         elif self.V_scr_grabbed == 0 and self.H_scr_grabbed == 0:
             
-            self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
-            self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
-            
-            if self.sel_end[0] > self.release_line_len:
-                self.sel_end[0] = self.release_line_len
-            self.selected =1
-            build_selection(self)
+            if self.mouse_Y + self.CATH.real < len(self.CATH.lines):
+                
+                self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
+                self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
+                
+                if self.sel_end[0] > self.release_line_len:
+                    self.sel_end[0] = self.release_line_len
+                self.selected =1
+                build_selection(self)
         
         # Fix up mouse position after text selection
         if self.V_scr_grabbed == 1 or self.H_scr_grabbed == 1:

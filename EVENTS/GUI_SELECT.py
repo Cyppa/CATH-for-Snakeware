@@ -34,14 +34,16 @@ def select_text(self):
         self.H_scr_grabbed == 0
         ):
         
-        self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
-        self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
-        
-        if self.sel_end[0] > self.release_line_len:
-            self.sel_end[0] = self.release_line_len
-        
-        self.selecting = 1
-        self.no_scroll = 1
+        if self.mouse_Y + self.CATH.real < len(self.CATH.lines):
+            
+            self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
+            self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
+            
+            if self.sel_end[0] > self.release_line_len:
+                self.sel_end[0] = self.release_line_len
+            
+            self.selecting = 1
+            self.no_scroll = 1
         
         def select_scroll(self, direction):
             
