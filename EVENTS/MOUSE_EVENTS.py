@@ -33,13 +33,10 @@ def update_events_mouse(self, event):
     y           = y + self.rel_Y - (self.EditorY + self.bar_width)
     self.mouseX = x
     self.mouseY = y + self.EditorY
-    
-    #self.top_label.set_text(str(self.mouse_X + 1)+":"+str(self.mouse_Y))
+
     if event.type == pygame.MOUSEBUTTONDOWN:
         
         self.mouse = 1
-        
-        #print('self.mouseX', self.mouseX,'self.mouseY', self.mouseY)
         # Check if mouse click is in writeable area
         if (x > 0 and x < (self.surface_size[0] - self.scroll_W) and y > 0 and
             y < (self.surface_size[1]- self.scroll_W - (self.CATH.text_size * 2))):
@@ -84,57 +81,59 @@ def update_events_mouse(self, event):
                 self.CATH.current_line         = self.line_Y + self.CATH.real  # Actual line number, included scrolled offset
                 self.CATH.display_current_line = self.line_Y                   # Screen line number
                 
-                
                 #update_text_info(self.CATH)
         else: self.CATH.no_entry = 1
         
     if event.type == pygame.MOUSEBUTTONUP:
-        # Check if we need to clear selection
-        if (self.sel_start[0] == self.mouse_X - 1 + self.CATH.new_pos and
-            self.sel_start[1] == self.mouse_Y + self.CATH.real):
-            
-            self.selecting = 0
-            self.selected  = 0
-            clear_selected(self)
-            
-        elif self.V_scr_grabbed == 0 and self.H_scr_grabbed == 0:
-            
-            if self.mouse_Y + self.CATH.real < len(self.CATH.lines):
-                
-                self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
-                self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
-                
-                if self.sel_end[0] > self.release_line_len:
-                    self.sel_end[0] = self.release_line_len
-                self.selected =1
-                build_selection(self)
         
-        # Fix up mouse position after text selection
-        if self.V_scr_grabbed == 1 or self.H_scr_grabbed == 1:
+        if self.window_move == False:
+  
+            # Check if we need to clear selection
+            if (self.sel_start[0] == self.mouse_X - 1 + self.CATH.new_pos and
+                self.sel_start[1] == self.mouse_Y + self.CATH.real):
+                
+                self.selecting = 0
+                self.selected  = 0
+                clear_selected(self)
+                
+            elif self.V_scr_grabbed == 0 and self.H_scr_grabbed == 0:
+                
+                if self.mouse_Y + self.CATH.real < len(self.CATH.lines):
+                    
+                    self.sel_end = [self.mouse_X + self.CATH.new_pos, self.mouse_Y + self.CATH.real]
+                    self.release_line_len = len(self.CATH.lines[self.sel_end[1] - 1])
+                    
+                    if self.sel_end[0] > self.release_line_len:
+                        self.sel_end[0] = self.release_line_len
+                    self.selected =1
+                    build_selection(self)
             
-            self.CATH.pos                  = self.grab_cursor[0]
-            self.CATH.display_pos          = self.grab_cursor[1]
-            self.CATH.current_line         = self.grab_cursor[2]
-            self.CATH.display_current_line = self.grab_cursor[3]
-        else:
-            if self.sel_start[1] > self.sel_end[1]:
-                self.CATH.current_line         = self.sel_end[1]# + self.CATH.real
-                self.CATH.display_current_line = self.sel_end[1]
-                self.CATH.pos= self.sel_end[0]
-            
-            if self.sel_start[0] > self.sel_end[0]:
-                self.CATH.pos= self.sel_end[0]
-            
-        self.V_col         = 100
-        self.H_col         = 100
-        self.mouse         = 0
-        self.scrolling     = 0
-        self.V_scr_grabbed = 0
-        self.V_release     = 0
-        self.H_release     = 0
-        self.H_scr_grabbed = 0
-        self.sel_loop      = 0
-        self.select_scroll = 0
-        self.no_scroll     = 0
+            # Fix up mouse position after text selection
+            if self.V_scr_grabbed == 1 or self.H_scr_grabbed == 1:
+                
+                self.CATH.pos                  = self.grab_cursor[0]
+                self.CATH.display_pos          = self.grab_cursor[1]
+                self.CATH.current_line         = self.grab_cursor[2]
+                self.CATH.display_current_line = self.grab_cursor[3]
+            else:
+                if self.sel_start[1] > self.sel_end[1]:
+                    self.CATH.current_line         = self.sel_end[1]# + self.CATH.real
+                    self.CATH.display_current_line = self.sel_end[1]
+                    self.CATH.pos= self.sel_end[0]
+                
+                if self.sel_start[0] > self.sel_end[0]:
+                    self.CATH.pos= self.sel_end[0]
+                
+            self.V_col         = 100
+            self.H_col         = 100
+            self.mouse         = 0
+            self.scrolling     = 0
+            self.V_scr_grabbed = 0
+            self.V_release     = 0
+            self.H_release     = 0
+            self.H_scr_grabbed = 0
+            self.sel_loop      = 0
+            self.select_scroll = 0
+            self.no_scroll     = 0
         
         

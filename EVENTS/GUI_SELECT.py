@@ -9,11 +9,14 @@ def select_text(self):
     
     # If mouse is pressed down lets get/ create some vars
     # needed for selecting text
-    if (self.mouse == 1 and self.sel_loop == 0    and
+    if (
+        self.mouse == 1 and self.sel_loop == 0    and
         (self.mouse_X) < self.CATH.max_line_chars and
         (self.mouse_Y) < self.CATH.total_lines +1 and
         self.H_scr_grabbed == 0 and
-        self.V_scr_grabbed == 0):
+        self.V_scr_grabbed == 0 and
+        self.window_move   == False
+        ):
         
         pos                = self.line_len - self.CATH.new_pos
         if pos < 0: pos    = 0
@@ -31,7 +34,8 @@ def select_text(self):
         (self.sel_start[0] != self.mouse_X or
          self.sel_start[1] != self.mouse_Y) and
         self.V_scr_grabbed == 0 and
-        self.H_scr_grabbed == 0
+        self.H_scr_grabbed == 0 and
+        self.window_move   == False
         ):
         
         if self.mouse_Y + self.CATH.real < len(self.CATH.lines):

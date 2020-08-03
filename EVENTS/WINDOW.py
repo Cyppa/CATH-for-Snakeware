@@ -23,47 +23,36 @@ from ..Editor.SQUARE      import Square
 
 ### From Main File
 def window_move_events(self, event):
-    pass
     
-    if event.type == pygame.USEREVENT and event.user_type == 'window_selected':
-        event.ui_element.is_active = True
-        print('you have selected window')
-    """
-    # If mouse is over title bar set a variable to help with winodw coords/ resizing                
-    if(event.type         == pygame.USEREVENT and
-       event.user_type    == pygame_gui.UI_BUTTON_ON_HOVERED and
-       event.ui_object_id == "#window.#title_bar" and
-       event.ui_element   == self.title_bar):
-        print('over bar')
-        self.window_move = True
-    
-    if(event.type         == pygame.USEREVENT and
-       event.user_type    == pygame_gui.UI_BUTTON_ON_UNHOVERED and
-       event.ui_object_id == "#window.#title_bar" and
-       event.ui_element   == self.title_bar):
-        print('under bar')
-        self.window_move = False
-    """
-    if(event.type         == pygame.USEREVENT and
-       event.user_type    == pygame_gui.UI_BUTTON_PRESSED and
-       event.ui_object_id == "#window.#title_bar" and
-       event.ui_element   == self.title_bar):
-        print('we are the...', pygame.mouse.get_pos())
-        self.window_move = True
+    if pygame.mouse.get_pressed()[0] == 1 and self.grab_pos == 0:
         
-        print('MOVING')
-        # Some variables to help update window size and position
-        # This enables us to get relative mouse position inside text window
+        self.GRAB               = pygame.mouse.get_pos()
         
-        self.win_grab           = self.get_container().get_size()
-        self.GRAB               = pygame.mouse.get_pos()         
-        self.mouse              = 1
+        if (
+            self.GRAB[0] > self.window_bar[0] - self.rel_X and
+            self.GRAB[0] < self.window_bar[2] - self.rel_X and
+            self.GRAB[1] > self.window_bar[1] - self.rel_Y and
+            self.GRAB[1] < self.window_bar[3] - self.rel_Y
+            ):
         
-    if event.type == pygame.MOUSEBUTTONUP and self.window_move == True:
+            self.selecting   = 0
+            self.selected    = 0
+            self.window_move = True
+            
+            # Some variables to help update window size and position
+            # This enables us to get relative mouse position inside text window
+            self.win_grab    = self.get_container().get_size()
+            self.GRAB        = pygame.mouse.get_pos()         
+            self.mouse       = 1
+            self.grab_pos    = 1
+            
+    elif pygame.mouse.get_pressed()[0] == 0 and self.grab_pos == 1:
+        
+        self.grab_pos    = 0
         self.window_move = False # reset var
-        print('have we moved window')
+        win_size         = self.get_container().get_size()
         # A method to get relative mouse coords inside text window... #
-        win_size = self.get_container().get_size()
+        
         x, y = pygame.mouse.get_pos()
         
         if win_size[0] > self.win_grab[0]:
@@ -90,6 +79,7 @@ def window_move_events(self, event):
         # End method to get relative mouse coords inside text window #
         
         self.mouse             = 0 # Tell certain modules we have released mouse
+        self.grab_pos          = 0
     
 ### From main(self).Editor
 def update_window_size(self):
