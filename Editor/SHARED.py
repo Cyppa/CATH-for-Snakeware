@@ -85,12 +85,20 @@ def save_load(self, option, file_name):
     if option == 'open':
         
         print(file_name)
+        self.selecting = 0
+        self.selected  = 0
+        clear_selected(self)
+        self.top_label.set_text("clear sel")
+        self.CATH.real      = 0
         self.CATH.open_file = 1
         self.CATH.lines.clear()
-        file_open = open(file_name, 'r')
-        _file_ = file_open.readlines()
+        file_open           = open(file_name, 'r')
+        _file_              = file_open.readlines()
         
-        self.CATH.total_lines = self.CATH.max_lines
+        if len(_file_) > self.CATH.max_lines:
+            self.CATH.total_lines = self.CATH.max_lines
+        else:
+            self.CATH.total_lines = len(_file_)
 
         for l in range(len(_file_)):
             self.CATH.lines.append(_file_[l].replace("\n", ""))
