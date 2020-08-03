@@ -92,6 +92,7 @@ def create_gui_variables(self, position):
     self.GRAB                  = [0,0]
     self.grab_line             = 0
     self.grab_cursor           = [0, 0, 0, 0]
+    self.grab_pos              = 0 # Get mouse press over window bar var
     
     # Horozontal Scrolling
     self.longest_line          = 0
