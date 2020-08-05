@@ -15,7 +15,8 @@ def select_text(self):
         (self.mouse_Y) < self.CATH.total_lines +1 and
         self.H_scr_grabbed == 0 and
         self.V_scr_grabbed == 0 and
-        self.window_move   == False
+        self.window_move   == False and
+        self.should_use_window_edge_resize_cursor() == False
         ):
         
         pos                = self.line_len - self.CATH.new_pos
@@ -35,7 +36,8 @@ def select_text(self):
          self.sel_start[1] != self.mouse_Y) and
         self.V_scr_grabbed == 0 and
         self.H_scr_grabbed == 0 and
-        self.window_move   == False
+        self.window_move   == False and
+        self.should_use_window_edge_resize_cursor() == False
         ):
         
         if self.mouse_Y + self.CATH.real < len(self.CATH.lines):
@@ -96,13 +98,16 @@ def build_selection(self):
     start[1] = self.sel_start[1] - self.CATH.real - 1
     end[0]   = self.sel_end[0]   - self.CATH.new_pos
     end[1]   = self.sel_end[1]   - self.CATH.real - 1
-    
+    # Fix offset if line numbers are displayed or not
+    if self.numbers == 1:
+        EditorX = self.EditorX + self.offset
+    else: EditorX = self.EditorX_old
     # If we only need one line
     if start[1] == end[1]:
         # Top Line
-        self.selX1 = (start[0] * self.CATH.text_width) + self.EditorX
+        self.selX1 = (start[0] * self.CATH.text_width) + EditorX
         self.selY1 = (start[1] * self.CATH.text_size)  + self.EditorY
-        self.selX2 = ((end[0] - start[0])  * self.CATH.text_width) + self.EditorX
+        self.selX2 = ((end[0] - start[0])  * self.CATH.text_width) + self.offset
         self.selY2 = self.CATH.text_size
         # Clear bottom line
         self.selX1a, self.selY1a = 0, 0
@@ -116,13 +121,13 @@ def build_selection(self):
         if (start[1] >= end[1] + 1):
                 start, end = end, start
         # Top Line
-        pos = (start[0] * self.CATH.text_width) + self.EditorX
+        pos = (start[0] * self.CATH.text_width) + EditorX
         self.selX1 = pos
         self.selY1 = (start[1] * self.CATH.text_size)  + self.EditorY
-        self.selX2 = (self.CATH.max_line_chars * self.CATH.text_width) - pos + self.EditorX
+        self.selX2 = (self.CATH.max_line_chars * self.CATH.text_width) - pos + EditorX
         self.selY2 = self.CATH.text_size
         # Bottom Line
-        self.selX1a = self.EditorX
+        self.selX1a = EditorX
         self.selY1a = (end[1] * self.CATH.text_size)  + self.EditorY
         self.selX2a = ((end[0]) * self.CATH.text_width)
         self.selY2a = self.CATH.text_size
@@ -134,7 +139,7 @@ def build_selection(self):
         else:
             # We need total lines minus top and bottom lines
             line_amount = end[1] - start[1] - 1
-            self.bX1    = self.EditorX
+            self.bX1    = EditorX
             self.bY1    = ((start[1] + 1) * self.CATH.text_size)  + self.EditorY
             self.bX2    = self.CATH.max_line_chars * self.CATH.text_width
             self.bY2    = self.CATH.text_size * line_amount

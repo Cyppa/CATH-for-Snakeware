@@ -37,16 +37,16 @@ def option_buttons(self, event, ui_manager):    # PyGame_Gui Button Presses
             
             if self.numbers == 1:
                 
-                self.text_offset       =   self.text_size * 3
-                self.CATH.width           =   self.Ewidth - self.text_offset
-                self.CATH.X               =   self.EditorX + self.text_offset
+                self.text_offset         =   self.text_size * 3
+                self.CATH.width          =   self.Ewidth - self.text_offset
+                self.CATH.X              =   self.EditorX + self.text_offset
                 self.CATH.max_line_chars =   self.CATH.max_line_chars - 4
                 update_text_info(self.CATH)
                 
             elif self.numbers == 0:
                 
-                self.CATH.width           =   self.Ewidth
-                self.CATH.X               =   self.EditorX
+                self.CATH.width          =   self.Ewidth
+                self.CATH.X              =   self.EditorX
                 self.CATH.max_line_chars =   self.CATH.max_line_chars + 4
                 update_text_info(self.CATH)
             

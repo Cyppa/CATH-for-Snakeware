@@ -29,9 +29,11 @@ def update_events_mouse(self, event):
     # Get Mouse Position and add relative offset (window XY)
     
     x, y        = pygame.mouse.get_pos()
-    x           = x + self.rel_X - self.EditorX
+    if self.numbers == 1:
+        x       = x + self.rel_X - self.EditorX
+    else: x     = x + self.rel_X - self.EditorX_old
     y           = y + self.rel_Y - (self.EditorY + self.bar_width)
-    self.mouseX = x
+    self.mouseX = x + (self.CATH.text_width * (self.nums + 1))
     self.mouseY = y + self.EditorY
 
     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -50,7 +52,7 @@ def update_events_mouse(self, event):
             
             self.character_X = round(x / self.CATH.text_width)
             self.line_Y      = round(y / self.CATH.text_size)
-            
+            self.top_label.set_text("CAHRX " + str(self.character_X))
             # Make sure cursor line position is less than total amount of lines
             if self.line_Y > len(self.CATH.lines):
                 self.line_Y = len(self.CATH.lines) - 1

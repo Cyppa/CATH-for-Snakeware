@@ -23,7 +23,7 @@ def update_Vscroll(self):
     
     ######### Scroll Bar - Home Made ;)
     # Do we need scrollbar, are there more lines of text in file than screen space?
-    if len(self.CATH.lines) > self.CATH.max_lines:
+    if len(self.CATH.lines) > self.CATH.max_lines + 1:
 
         # Create some  needed variables
         self.body_Y         = self.surface_size[1] - self.offset

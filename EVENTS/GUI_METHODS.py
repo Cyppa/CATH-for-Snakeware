@@ -23,6 +23,7 @@ from pygame_gui.elements.ui_image import UIImage
 # Update stat info label
 def status_update(self, mouse_X = 1, mouse_Y = 1):
     
+    
     cur_pos   = self.CATH.pos + 1
     line_pos  = self.CATH.current_line
     chars     = len(self.CATH.lines[self.CATH.current_line - 1]) + 1
@@ -33,8 +34,10 @@ def status_update(self, mouse_X = 1, mouse_Y = 1):
     else        : self.caps = " ON"
 
     x, y = pygame.mouse.get_pos()
-    x    = x + self.rel_X - self.EditorX
-    y    = y + self.rel_Y - (self.EditorY + self.bar_width)
+    if self.numbers == 1:
+        x   = x + self.rel_X - self.EditorX
+    else: x = x + self.rel_X - self.EditorX_old
+    y       = y + self.rel_Y - (self.EditorY + self.bar_width)
     
     # Get clicks at centre of character by creating an offset
     x = x - (self.CATH.text_width // 2)
