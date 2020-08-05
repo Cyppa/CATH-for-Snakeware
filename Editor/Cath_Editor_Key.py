@@ -20,7 +20,7 @@
 import pygame as P
 from ..Editor.SHARED                 import Col, clear_selected, update_scroll_info, GOTO_line
 from ..Editor.Cath_Editor_Select     import copy_paste, cut, remove
-from ..Editor.Cath_Editor_Extras     import update_text_info, reset, write_area, clip_nav, key_home
+from ..Editor.Cath_Editor_Extras     import update_text_info, write_area, clip_nav, key_home
 from ..Editor.Cath_Editor_Backspace  import backspace
 from ..Editor.Cath_Editor_Delete     import delete
 from ..Editor.Cath_Editor_Add_Spaces import add_space, enter

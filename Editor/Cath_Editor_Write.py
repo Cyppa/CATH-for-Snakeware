@@ -39,7 +39,7 @@ def write(self, key):
                 cut(self)
                 clear_selected(self)
                 
-            self.parent.selected = 0
+            self.parent.selected  = 0
             self.parent.selecting = 0
             
             def display(key, upper = 0):
@@ -64,7 +64,6 @@ def write(self, key):
             self.lines[self.i] = self.current_text
             update_text_info(self)
             
-            #if self.pos > self.max_line_chars: self.new_pos += 1
             # Horizontal scrolling offset
             if self.pos >= self.max_line_chars + self.new_pos:
                 self.new_pos += 1

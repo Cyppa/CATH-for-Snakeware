@@ -20,7 +20,7 @@
 import pygame as P
 from ..Editor.SHARED import Col, clear_selected, update_scroll_info
 from ..Editor.Cath_Editor_Select import copy_paste, cut, remove
-from ..Editor.Cath_Editor_Extras import update_text_info, reset, write_area, clip_nav
+from ..Editor.Cath_Editor_Extras import update_text_info, write_area, clip_nav
 from ..Editor.Cath_Editor_Key import key_down
 from ..Editor.SQUARE import Square
 import time, os
@@ -196,7 +196,7 @@ class PyEdit_no_gui:
     def draw(self, surface):
         
         self.display_pos = self.pos - self.new_pos
-        #self.parent.top_label.set_text('dis: ' + str(self.display_pos) + ' p: ' + str(self.pos) + ' n: ' + str(self.new_pos))
+        
         def render_body_of_text(self, surface):
         
             font = P.font.Font(self.FONT, self.text_size)
@@ -211,7 +211,10 @@ class PyEdit_no_gui:
                     text = text[:self.max_line_chars]
        
                 Text = font.render(text, True, Col(self.font_colour))
-                surface.blit(Text, (self.X, self.Y + (l * self.text_size)))
+                if self.parent.numbers == 1:
+                    surface.blit(Text, (self.parent.EditorX + self.parent.offset, self.Y + (l * self.text_size)))
+                else:
+                    surface.blit(Text, (self.parent.offset, self.Y + (l * self.text_size)))
         
         # Render Cursor
         def render_cursor(self, surface):
@@ -238,8 +241,12 @@ class PyEdit_no_gui:
                 
                 # Update cursor screen position
                 self.display_pos = self.pos - self.new_pos
+                # Offset if displaying line numbers
+                if self.parent.numbers == 1:
+                    Cx  = 1 + (self.text_width * self.display_pos + 1) + ((self.parent.nums) * self.text_width) + self.parent.offset
+                else:
+                    Cx  = 1 + (self.text_width * self.display_pos + 1)
                 
-                Cx  = 1 + (self.text_width * self.display_pos + 1)
                 Cy  = self.Y + self.text_size + ((self.display_current_line -1) * self.text_size)
                 Cy2 = Cy
                 
@@ -263,9 +270,9 @@ class PyEdit_no_gui:
         render_body_of_text(self, surface)
     
     # Get the difference between the current displayed line and the actual line
-    def get_over(self):
-        over = self.current_line - self.total_lines
-        return([over + 1, self.current_line, self.display_current_line])
+    #def get_over(self):
+    #    over = self.current_line - self.total_lines
+    #    return([over + 1, self.current_line, self.display_current_line])
     
     # Get info about the current cursor position + other stuff
     def get_pos(self):

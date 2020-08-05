@@ -61,6 +61,15 @@ def update_scroll_info(self):
         self.parent.move_lines  = self.V_scroll_steps / line_dif
         self.parent.move        = int(self.V_step / self.move_lines)        
 
+def save_timer(self, time_delta):
+    
+    self.save_count = (self.save_count + 1) % 350
+    
+    file_name = self.app_path + "/Backups/Saved.txt"
+    
+    if self.save_count == 0:
+        save_load(self, 'save', file_name)
+    
 # From PyGameGui self.CATH. Save/ Load method...
 def save_load(self, option, file_name):
         

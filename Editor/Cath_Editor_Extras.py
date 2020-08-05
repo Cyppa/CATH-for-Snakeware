@@ -76,6 +76,7 @@ def update_text_info(self):
     self.search = 0
 
 # Not sure if next method is necesarry anymore?   
+
 def reset(self):
     
     if self.total_lines > len(self.lines):
