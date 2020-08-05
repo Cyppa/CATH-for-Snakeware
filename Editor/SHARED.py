@@ -64,7 +64,6 @@ def update_scroll_info(self):
 def save_timer(self, time_delta):
     
     self.save_count = (self.save_count + 1) % 450
-    print(self.save_count)
     
     file_name = self.app_path + "/Backups/Saved.txt"
     
