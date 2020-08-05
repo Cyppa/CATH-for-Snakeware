@@ -34,7 +34,7 @@ def create_assets(self, ui_manager):
                              self.scroll_W + 1, self.surface_size[1] - self.V_scroll_Y + 1,
                              orient = "vertical", colour = "grey", fill = True, line_width = 1)
     
-    self.H_scroll_bg = Square(self.surface_element.image, self.EditorX - 2, self.surface_size[1] - self.scroll_W - 2,
+    self.H_scroll_bg = Square(self.surface_element.image, self.EditorX_old - 2, self.surface_size[1] - self.scroll_W - 2,
                              self.scroll_W + 1, self.surface_size[0] - self.scroll_W - 2,
                              orient = "horizontal", colour = "grey", fill = True, line_width = 1)
     

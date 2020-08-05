@@ -50,6 +50,12 @@ def create_gui_variables(self, position):
     self.Ewidth                = size[0]                             # Total width of text editor backend
     self.Eheight               = size[1] - self.EditorY              # Total height of text editor backend
     self.FPS                   = 60
+    self.save_count            = 1
+    
+    # Line Number Display vars
+    self.EditorX_old           = self.EditorX
+    self.nums                  = 0         # When displaying line numbers, this is the character offset amount
+    self.display_number        = 0         # Used to help display line numbers
     
     self.mouse_X               = 0
     self.mouse_Y               = 0
