@@ -44,13 +44,14 @@ from .EVENTS.H_SCROLL              import update_Hscroll, render_Hscroll
 from .EVENTS.WINDOW                import update_window_size, window_move_events
 from .EVENTS.WINDOW                import window_move_events
 from .EVENTS.GUI_SELECT            import select_text, render_selection, build_selection
+from .EVENTS.GUI_NUMBERS           import numbers
 from .ASSETS.GUI_ASSETS            import create_assets
 from .ASSETS.BUILD_SEARCH_BUTTONS  import rebuild_search
 from .ASSETS.GUI_VARIABLES         import create_gui_variables
 from .Editor.SHARED                import Col
 from .Editor.Cath_Editor           import PyEdit_no_gui
 from .Editor.Cath_Editor_Extras    import update_text_info
-from .Editor.SHARED                import clear_selected, update_scroll_info, Col
+from .Editor.SHARED                import clear_selected, update_scroll_info, Col, save_timer
 from pygame_gui.ui_manager         import UIManager
 from pygame_gui.elements.ui_window import UIWindow
 from pygame_gui.elements.ui_image  import UIImage
@@ -106,6 +107,7 @@ class Cath(pygame_gui.elements.UIWindow):
 
     def update(self, time_delta):
         super().update(time_delta)
+        save_timer(self, time_delta)
         x, y = pygame.mouse.get_pos()
         status_update(self, x, y)
         # Update Selection box
@@ -126,5 +128,8 @@ class Cath(pygame_gui.elements.UIWindow):
         render_Vscroll(self, self.surface_element.image)
         render_Hscroll(self, self.surface_element.image)
         select_text(self)
+        
+        # Numbers Display
+        numbers(self, self.surface_element.image)
         
     
