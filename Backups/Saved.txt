@@ -1,0 +1,192 @@
+#######################################################################################################
+#
+#    This file is part of CATH || PyGame_GUI Text Editor.
+#
+#    CATH is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    CATH is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with CATH.  If not, see <https://www.gnu.org/licenses/>.
+#
+#######################################################################################################
+
+
+import pygame
+from pygame.locals import *
+
+from EVENTS.TOP_PANEL_BUTTONS     import top_panel_buttons
+from EVENTS.BOTTOM_PANEL_BUTTONS  import bottom_panel_buttons
+from EVENTS.WINDOW_CLOSE          import close_window, window_close_events
+from EVENTS.GUI_METHODS           import status_update, update_bg
+from EVENTS.DIALOG_EVENTS         import confirmation
+from EVENTS.MOUSE_EVENTS          import update_events_mouse
+from EVENTS.TEXT_ENTRY            import text_entry
+from EVENTS.SEARCH_BUTTONS        import search_buttons
+from EVENTS.OPTION_BUTTONS        import option_buttons
+from ASSETS.GUI_ASSETS            import create_assets
+from ASSETS.BUILD_SEARCH_BUTTONS  import rebuild_search
+from ASSETS.GUI_VARIABLES         import create_gui_variables
+
+from Editor.Cath_Editor           import PyEdit_no_gui
+from Editor.Cath_Editor_Extras    import update_text_info
+from Editor.SHARED                import clear_selected, update_scroll_info
+
+class Editor:
+    def __init__(self, size, ui_manager, SELF):
+        
+        self.prev_sizeX = 0
+        self.prev_sizeY = size[1]
+        self.size       = size
+        self.ui_manager = ui_manager
+        
+        create_gui_variables(self, size, ui_manager, SELF)
+        create_assets(self, ui_manager, SELF)
+        update_bg(self, size, ui_manager, SELF)
+        
+        # Create minimum window dimensions
+        min_X           = (5.5 * self.buttonX) - (self.offset *4)
+        min_Y           = self.Panel_size + self.bar_width + (self.text_size * 8)
+        SELF.set_minimum_dimensions((min_X, min_Y))
+        
+        self.CATH = PyEdit_no_gui(self.EditorX, self.EditorY, self.Ewidth, self.Eheight,
+                                  self.FPS, self.FONT, self.text_size, "white", self)
+
+    def process_event(self, event, SELF):
+        
+        self.CATH.update(event, SELF)
+        top_panel_buttons(self, event, self.ui_manager)
+        bottom_panel_buttons(self, event, self.ui_manager)
+        close_window(self, event, self.ui_manager)
+        update_events_mouse(self, event, SELF)
+        confirmation(self, event, self.ui_manager)
+        window_close_events(self, event, SELF)
+        text_entry(self, event)
+        search_buttons(self, event)
+        option_buttons(self, event, self.ui_manager, SELF)
+
+    def update(self, time_delta, SELF):
+        
+        # VSCROLL vars
+        if self.scrolled == 0:
+            get_current_over = self.CATH.current_line - self.CATH.max_lines
+            self.V_move_bar = get_current_over * self.move_lines
+            self.scroll_TOP_ = self.V_scroll_Y + self.V_move_bar
+        else:
+            self.V_move_bar = 0
+            self.scroll_TOP_ = self.scroll_TOP
+        
+        
+        # Update stats label
+        status_update(self, self.character_X, self.line_Y)
+        
+        # Keep Window size updated
+        self.surface_size     = SELF.get_container().get_size()
+        self.panel_W          = self.surface_size[0]
+        # Adjust labels' text to resizing
+        self.label_W          = self.panel_W - (self.offset * 2) - (self.buttonX * 2)
+        self.stat_label_chars = self.label_W // self.text_width
+        self.top_label_chars  = ((self.panel_W - (5 * self.buttonX)) // self.text_width) - 2
+        if self.top_label_chars < 0 : self.top_label_chars  = 0
+        if self.stat_label_chars < 0: self.stat_label_chars = 0
+        
+        #Check if window dimensions have change, if so rebuild assets
+        if self.prev_sizeX != self.surface_size[0]:
+            self.top_label.set_text("")
+            self.prev_sizeX = self.surface_size[0]
+            
+            if self.search_button_pressed == True:
+                self.text_entryX  = round((self.panel_W - (self.buttonX * 2.5))/ 2) - 4
+                rebuild_search(self, SELF.ui_manager, self.text_entryX)
+            
+            # Update size of window background
+            if SELF.surface_element: SELF.surface_element.kill()
+            update_bg(self, self.surface_size, self.ui_manager, SELF)
+            
+            # Update CATH width
+            self.CATH.max_line_chars = round(self.panel_W / self.CATH.text_width) - 3
+            print('Max Line Characters:', self.CATH.max_line_chars)
+            
+        if self.prev_sizeY != self.surface_size[1]:
+            # Update CATH height
+            self.CATH.max_lines = round((self.surface_size[1] - self.EditorY)/ self.CATH.text_size) - 2
+            
+            if self.prev_sizeY < self.surface_size[1]:
+                ## Find out if bottom line has appeared on screen...
+                ## NEEDS SERIOUS WORK! IS NOT WORKING YET...
+                if self.CATH.max_lines < len(self.CATH.display_lines):
+                    print("BOTTOM LINE HIT!!!")
+                else:
+                    print('GROWING')  
+            else:
+                print('SHRINKING')
+            self.CATH.update_max_lines()
+            
+            self.prev_sizeY     = self.surface_size[1]
+            
+            if SELF.surface_element: SELF.surface_element.kill()
+            update_bg(self, self.surface_size, self.ui_manager, SELF)
+            
+    def draw(self, surface):
+        
+        surface.blit(self.background, (0, 0))
+        self.CATH.draw(surface)
+       
+            
+       
+        ######### Scroll Bar - Home Made ;)
+        # Do we need scrollbar, are there more lines of text in file than screen space?
+        if len(self.CATH.lines) > self.CATH.max_lines:
+            #update_scroll_info(self)
+            
+            total_Y             = len(self.CATH.lines)             # Total lines of text in file
+            over_lines          = total_Y -self.CATH.max_lines - 1 # Amount of lines we need to scroll
+            total               = self.CATH.max_lines / total_Y    # How many times do total file lines divide into screen space
+            self.V_bar_length   = self.body_Y * total              # Scroll Bar Length
+            V                   = (self.body_Y - self.V_bar_length) / over_lines
+            self.V_unit         = over_lines / V                   # one scroll unit
+           
+            if (self.mouse == 1 and self.mouseX > self.V_scroll_X and self.mouseX < self.panel_W and
+                self.mouseY > self.scroll_TOP and self.mouseY < self.scroll_TOP + self.V_bar_length):
+                
+                if self.V_release == 0:
+                    
+                    self.temp_var      = self.scroll_TOP
+                    self.V_scr_grab    = self.mouseY
+                    self.V_scr_grabbed = 1
+                    self.V_release     = 1
+                    self.V_move_add    = self.V_move
+            
+            if self.V_scr_grabbed == 1:
+                self.V_move     = self.mouseY - self.V_scr_grab
+                
+                if self.scroll_TOP > self.V_scroll_Y and self.scroll_TOP < self.scroll_TOP + round(V):
+                    move = self.scroll_TOP - self.V_scroll_Y
+                    
+                    for l in range(len(self.CATH.display_lines)):
+                        self.CATH.display_lines[l]     = self.CATH.lines[l + round(move * self.V_unit)]
+                    
+                self.scroll_TOP =  self.V_move + self.temp_var
+            
+        
+        # Draw Vertical Scroll Bar if we need too
+        if len(self.CATH.lines) > self.CATH.max_lines:
+            # Keep Vertical Bar from moving too far up or down
+            if self.scroll_TOP < self.V_scroll_Y: self.scroll_TOP = self.V_scroll_Y
+            if self.scroll_TOP > self.V_scroll_Y + int(V): self.scroll_TOP = self.V_scroll_Y + int(V)
+            
+            pygame.draw.rect(surface,(255, 255, 255),
+                            (self.V_scroll_X, self.scroll_TOP, self.scroll_W, self.V_bar_length))
+            
+        # Number Line
+        """
+        if self.numbers == 1:
+            pygame.draw.line(surface, (255, 255, 255), (self.Lx, self.Ly),
+                             (self.Lx2, self.Ly2), 2)
+        """

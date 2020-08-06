@@ -63,13 +63,15 @@ def update_scroll_info(self):
 
 def save_timer(self, time_delta):
     
-    self.save_count = (self.save_count + 1) % 350
+    self.save_count = (self.save_count + 1) % 450
     
     file_name = self.app_path + "/Backups/Saved.txt"
     
-    if self.save_count == 0:
+    if self.save_count == 350:
         save_load(self, 'save', file_name)
-    
+    if self.save_count == 0:
+        self.parent.top_label.set_text(("")[:self.parent.top_label_chars])
+
 # From PyGameGui self.CATH. Save/ Load method...
 def save_load(self, option, file_name):
         
@@ -83,7 +85,7 @@ def save_load(self, option, file_name):
         
                 for l in range(len(self.CATH.lines) - 1):
                     print(self.CATH.lines[l], file = file_)
-            self.parent.top_label.set_text(("FILE SAVED!")[:self.parent.top_label_chars])      
+            self.parent.top_label.set_text(("FILE SAVED!")[:self.parent.top_label_chars])
             self.CATH.save_file = 0
         
         except FileNotFoundError:
